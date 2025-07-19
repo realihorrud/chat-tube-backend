@@ -1,0 +1,25 @@
+services:
+  app:
+    container_name: ai_summarizer_bot_app
+    build:
+      context: .
+      args:
+        APP_ENV: ${APP_ENV:-production}
+    env_file:
+      - .env
+    environment:
+      PHP_IDE_CONFIG: serverName=AISummarizerBot
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "${APP_PORT:-80}:80"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10M"
+        max-file: "5"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://0.0.0.0:80/up" ]
+      interval: 30s
+      timeout: 10s
+      retries: 6
