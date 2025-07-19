@@ -8,5 +8,4 @@ parameters:
         - app
         - config
         - bootstrap
-        - database/factories
         - routes
