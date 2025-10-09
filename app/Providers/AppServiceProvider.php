@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Telegram\ActualTelegramBotApi;
+use App\Telegram\TelegramBotApi;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
@@ -34,6 +36,12 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureUrls();
         $this->configureVite();
         $this->configurePasswordValidation();
+        $this->configureServiceContainer();
+    }
+
+    private function configureServiceContainer(): void
+    {
+        $this->app->bind(TelegramBotApi::class, ActualTelegramBotApi::class);
     }
 
     /**

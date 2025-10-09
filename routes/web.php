@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\TelegramController;
+use App\Http\Middleware\SetLocaleMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,4 +11,5 @@ Route::get('/', function () {
 });
 
 Route::post(sprintf('/%s/webhook', config('services.telegram.bot_token')), TelegramController::class)
-    ->name('telegram.webhook');
+    ->name('telegram.webhook')
+    ->middleware(SetLocaleMiddleware::class);

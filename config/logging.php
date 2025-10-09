@@ -137,8 +137,12 @@ return [
             'replace_placeholders' => true,
         ],
 
-        'openai' => [
-            'key' => env('OPENAI_API_KEY'),
+        'api' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api.log'),
+            'level' => env('LOG_LEVEL', 'error'),
+            'days' => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
         ],
     ],
 
