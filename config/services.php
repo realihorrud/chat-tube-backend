@@ -38,7 +38,18 @@ return [
     ],
 
     'telegram' => [
+        'api_url' => env('TELEGRAM_API_URL').env('TELEGRAM_BOT_TOKEN').'/',
         'bot_token' => env('TELEGRAM_BOT_TOKEN'),
-        'webhook_url' => env('TELEGRAM_WEBHOOK_URL'),
+    ],
+
+    'supadata' => [
+        'base_uri' => env('SUPADATA_BASE_URI'),
+        'api_key' => env('SUPADATA_API_KEY'),
+    ],
+
+    'open_ai' => [
+        'base_uri' => env('OPENAI_BASE_URI'),
+        'api_key' => env('OPENAI_API_KEY'),
+        'model' => 'gpt-4.1',
     ],
 ];

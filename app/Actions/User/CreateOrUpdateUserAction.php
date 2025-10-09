@@ -7,9 +7,13 @@ namespace App\Actions\User;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Telegram\Bot\Objects\User as TelegramUser;
+use Throwable;
 
 final class CreateOrUpdateUserAction
 {
+    /**
+     * @throws Throwable
+     */
     public function run(TelegramUser $userObject): User
     {
         return DB::transaction(function () use ($userObject) {

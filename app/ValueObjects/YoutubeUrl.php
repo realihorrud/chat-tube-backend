@@ -1,0 +1,37 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\ValueObjects;
+
+use InvalidArgumentException;
+
+final readonly class YoutubeUrl
+{
+    private string $url;
+
+    private function __construct(string $url)
+    {
+        $pattern = '/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:\S+)?$|^([a-zA-Z0-9_-]{11})$/';
+
+        if (! preg_match($pattern, $url)) {
+            throw new InvalidArgumentException('Youtube url is not valid.');
+        }
+
+        $this->url = $url;
+    }
+
+    public static function fromString(string $url): self
+    {
+        return new self($url);
+    }
+
+    public function value(): string
+    {
+        if (str_contains('http', $this->url)) {
+            return $this->url;
+        }
+
+        return 'https://youtube.com/watch?v='.$this->url;
+    }
+}
