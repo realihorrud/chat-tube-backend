@@ -13,11 +13,11 @@ final class User extends Dto
         public int $id,
         public bool $is_bot,
         public string $first_name,
-        public Optional|string $last_name,
-        public Optional|string $username,
-        public Optional|string $language_code,
-        public Optional|bool $is_premium,
-        public Optional|bool $added_to_attachment_menu,
-        public Optional|bool $has_main_web_app,
+        public Optional|string $last_name = '',
+        public Optional|string $username = '',
+        public Optional|string $language_code = 'en',
+        public Optional|bool $is_premium = false,
+        public Optional|bool $added_to_attachment_menu = false,
+        public Optional|bool $has_main_web_app = false,
     ) {}
 }

@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Telegram\Entities\Update;
+use App\Telegram\TelegramBotApi;
 use Illuminate\Console\Command;
 
 final class ChooseModeCommand extends Command
 {
     protected $signature = 'modes';
 
-    protected $description = 'Choose a mode';
+    protected $description = 'Choose mode';
 
-    public function handle(): void
+    public function handle(Update $update, TelegramBotApi $api): void
     {
         //        $inlineKeyboard = Keyboard::make()->inline();
         //        Mode::all()->each(function (Mode $mode) use ($inlineKeyboard) {
