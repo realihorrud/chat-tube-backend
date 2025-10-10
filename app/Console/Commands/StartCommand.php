@@ -4,23 +4,31 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Actions\User\CreateOrUpdateUserAction;
+use App\Telegram\Entities\Update;
+use App\Telegram\Entities\User;
+use App\Telegram\TelegramBotApi;
 use Illuminate\Console\Command;
+use Throwable;
+use Webmozart\Assert\Assert;
 
 final class StartCommand extends Command
 {
-    protected $name = 'start';
+    protected $signature = 'start {update}';
 
-    protected $description = 'Start Command to get you started';
+    protected $description = 'User started the bot';
 
-    public function handle(): void
+    /**
+     * @throws Throwable
+     */
+    public function handle(TelegramBotApi $api, CreateOrUpdateUserAction $action): void
     {
-        //        /** @var User $userObject */
-        //        $userObject = $this->getUpdate()->getRelatedObject()->from;
-        //
-        //        $this->createOrUpdateUserAction->run($userObject);
-        //
-        //        $this->replyWithMessage([
-        //            'text' => __('messages.start'),
-        //        ]);
+        $update = $this->argument('update');
+        Assert::isInstanceOf($update, Update::class);
+        Assert::isInstanceOf($update->message->from, User::class);
+
+        $action->run($update->message->from);
+
+        $api->sendMessage(['chat_id' => $update->message->chat->id, 'text' => __('messages.start')]);
     }
 }

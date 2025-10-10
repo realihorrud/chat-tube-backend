@@ -20,15 +20,9 @@ final readonly class TelegramController
         $update = Update::from($request->all());
 
         if (is_string($update->message->text) && str_starts_with($update->message->text, '/')) {
-            $this->commandsResolver->resolve($update->message->text);
+            $this->commandsResolver->resolve($update);
         }
 
-        //        $update = Telegram::commandsHandler(true);
-        //
-        //        $relatedObject = $update->getRelatedObject();
-        //
-        //        Log::debug('Related object: ', $relatedObject->toArray());
-        //
         //        $foo = $this->telegram->sendMessage([
         //            'chat_id' => $relatedObject->chat_id,
         //            'text' => 'Choose the mode:',

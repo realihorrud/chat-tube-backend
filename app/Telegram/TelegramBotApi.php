@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Telegram;
 
+use App\Telegram\Entities\Message;
+
 interface TelegramBotApi
 {
     public function getMe(): array;
@@ -13,4 +15,23 @@ interface TelegramBotApi
     public function deleteWebhook(): bool;
 
     public function getWebhookInfo(): array;
+
+    /**
+     * Implements https://core.telegram.org/bots/api#sendmessage
+     *
+     * @param array{
+     *     chat_id:int|string,
+     *     message_thread_id?:int,
+     *     text:string,
+     *     parse_mode?:string,
+     *     entities?:array,
+     *     link_preview_options?:array,
+     *     disable_notification?:bool,
+     *     protect_content?:bool,
+     *     message_effect_id?:string,
+     *     reply_parameters?:array,
+     *     reply_markup?:array
+     * } $params
+     */
+    public function sendMessage(array $params): Message;
 }

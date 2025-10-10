@@ -32,7 +32,7 @@ app-console: ## CONSOLE: Enter into app container
 
 .PHONY: dm
 dm: ## Drop merged branches, use it wisely!
-	git checkout dev && git branch --merged | grep -v \* | xargs git branch -D
+	git checkout main && git branch --merged | grep -v \* | xargs git branch -D
 
 .PHONY: composer-test
 composer-test: ## Run composer test in container
