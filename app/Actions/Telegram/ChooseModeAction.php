@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Telegram;
 
 use App\DTOs\ChooseModeDTO;
-use App\Models\Mode;
+use App\Models\Prompt;
 use App\Models\User;
 use App\Models\UserSetting;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +22,7 @@ final class ChooseModeAction
     {
         return DB::transaction(function () use ($dto) {
             [, $mode] = explode('-', $dto->data);
-            $mode = Mode::query()->firstWhere('key', $mode);
+            $mode = Prompt::query()->firstWhere('key', $mode);
             if (blank($mode)) {
                 throw new RuntimeException('Unknown mode: '.$mode);
             }

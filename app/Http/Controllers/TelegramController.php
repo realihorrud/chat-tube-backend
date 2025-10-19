@@ -4,51 +4,73 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\Telegram\ChoosePromptAction;
+use App\Actions\UserVideoRequest\StoreUserVideoRequestAction;
+use App\DTOs\StoreUserVideoRequestDTO;
+use App\Resolvers\CallbackQueryResolver;
 use App\Resolvers\CommandsResolver;
+use App\Telegram\Entities\CallbackQuery;
 use App\Telegram\Entities\Update;
+use App\Telegram\TelegramBotApi;
+use App\ValueObjects\YoutubeUrl;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
+use Spatie\LaravelData\Optional;
+use Throwable;
+use Webmozart\Assert\Assert;
 
 final readonly class TelegramController
 {
-    public function __construct(
-        private CommandsResolver $commandsResolver,
-    ) {}
-
-    public function __invoke(Request $request): JsonResponse
-    {
+    /**
+     * @throws Throwable
+     */
+    public function __invoke(
+        Request $request,
+        CommandsResolver $commandsResolver,
+        CallbackQueryResolver $callbackQueryResolver,
+        TelegramBotApi $api,
+        ChoosePromptAction $choosePromptAction,
+        StoreUserVideoRequestAction $storeUserVideoRequestAction
+    ): JsonResponse {
         $update = Update::from($request->all());
 
-        if (is_string($update->message->text) && str_starts_with($update->message->text, '/')) {
-            $this->commandsResolver->resolve($update);
+        Log::info(
+            message: 'update object',
+            context: $update->toArray(),
+        );
+
+        if ($update->callback_query instanceof CallbackQuery) {
+            $callbackQueryResolver->resolve($update->callback_query);
+
+            return response()->json();
         }
 
-        //        $foo = $this->telegram->sendMessage([
-        //            'chat_id' => $relatedObject->chat_id,
-        //            'text' => 'Choose the mode:',
-        //        ]);
-        //
-        //        if ($relatedObject instanceof CallbackQuery) { // Callback from inline keyboard
-        //            $text = $this->callbackActionStrategy->run($relatedObject);
-        //
-        //            $this->telegram->sendMessage([
-        //                'chat_id' => $relatedObject->from->id,
-        //                'text' => $text,
-        //            ]);
-        //
-        //            return response()->json();
-        //        }
-        //
-        //        if ($relatedObject instanceof Message && str_starts_with($relatedObject->text, '/')) { // Bot command, then skip it
-        //            return response()->json();
-        //        }
-        //
-        //        $response = $this->generateResponseAction->run(GenerateResponseDTO::fromMessage($relatedObject));
-        //
-        //        $this->telegram->sendMessage([
-        //            'chat_id' => $relatedObject->chat->id,
-        //            'text' => $response,
-        //        ]);
+        // If starts with slash than treat it as /command-name
+
+        if (is_string($update->message->text) && str_starts_with($update->message->text, '/')) {
+            $commandsResolver->resolve($update);
+
+            return response()->json();
+        }
+
+        if (! $update->message->text instanceof Optional) {
+            Assert::string($update->message->text);
+            try {
+                YoutubeUrl::fromString($update->message->text);
+
+                $storeUserVideoRequestAction->run(StoreUserVideoRequestDTO::fromUpdate($update));
+                $choosePromptAction->handle($update->message->chat->id);
+
+                return response()->json();
+            } catch (InvalidArgumentException $exception) {
+                $api->sendMessage([
+                    'chat_id' => $update->message->chat->id,
+                    'text' => $exception->getMessage(),
+                ]);
+            }
+        }
 
         return response()->json(['ok' => true]);
     }

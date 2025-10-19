@@ -11,6 +11,6 @@ EOF;
 
 return [
     'start' => $startCommand,
-    'choose_mode' => '🚀 Choose a mode to transform your video transcript into insights',
+    'choose_mode' => 'Choose the preferable prompt 🤖',
     'choose_mode_saved' => '✅ Mode selected. Ready to summarize your video!',
 ];

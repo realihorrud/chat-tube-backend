@@ -1,0 +1,22 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Supadata\Entities;
+
+use App\Entities\Entity;
+
+/**
+ * @see https://docs.supadata.ai/youtube/get-transcript
+ */
+final class Transcript extends Entity
+{
+    /**
+     * @param  string[]  $availableLangs
+     */
+    public function __construct(
+        public readonly string $content,
+        public readonly string $lang,
+        public readonly array $availableLangs
+    ) {}
+}

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Telegram;
 
 use App\Telegram\Entities\Message;
+use Exception;
 use Illuminate\Container\Attributes\Config;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Uri;
 
 final readonly class ActualTelegramBotApi implements TelegramBotApi
@@ -68,6 +70,8 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
     /**
      * @see https://core.telegram.org/bots/api#sendmessage
      *
+     * {@inheritdoc}
+     *
      * @param array{
      *     chat_id:int|string,
      *     message_thread_id?:int,
@@ -92,5 +96,39 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
             ->json();
 
         return Message::from($response['result'] ?? []);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteMessage(int $chatId, int $messageId): bool
+    {
+        try {
+            Http::baseUrl($this->baseUrl)
+                ->throw()
+                ->post('deleteMessage', ['chat_id' => $chatId, 'message_id' => $messageId])
+                ->json();
+
+            return true;
+        } catch (Exception $e) {
+            Log::error(
+                message: $e->getMessage(),
+                context: ['chat_id' => $chatId, 'message_id' => $messageId],
+            );
+
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteMessages(int $chatId, ...$messageIds): bool
+    {
+        foreach ($messageIds as $messageId) {
+            $this->deleteMessage($chatId, $messageId);
+        }
+
+        return true;
     }
 }
