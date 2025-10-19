@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Telegram\Entities;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Spatie\LaravelData\Dto;
+use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
-final class Message extends Dto implements Arrayable
+final class Message extends Data
 {
     public function __construct(
         public int $message_id,
@@ -97,11 +96,4 @@ final class Message extends Dto implements Arrayable
         public Optional|WebAppData $web_app_data,
         public Optional|InlineKeyboardMarkup $reply_markup,
     ) {}
-
-    public function toArray(): array
-    {
-        // TODO: should return only non-Optional property values
-
-        return [];
-    }
 }

@@ -14,5 +14,5 @@ final class VideoSummarized
     /**
      * Create a new event instance.
      */
-    public function __construct(public int $telegramId) {}
+    public function __construct() {}
 }

@@ -9,7 +9,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "openai-php/client": "^0.14.0",
@@ -62,7 +62,7 @@
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
         ],
-        "ide-helper": "php artisan ide-helper:models -RW && @pint",
+        "ide-helper": "php artisan ide-helper:models -RW && composer lint",
         "lint": "pint",
         "refactor": "rector && composer lint",
         "test:lint": "pint --test",

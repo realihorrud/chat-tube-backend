@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read Mode $mode
+ * @property-read Prompt $mode
  * @property-read User $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserSetting newModelQuery()
@@ -30,11 +30,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 final class UserSetting extends Model
 {
     /**
-     * @return BelongsTo<Mode, $this>
+     * @return BelongsTo<Prompt, $this>
      */
     public function mode(): BelongsTo
     {
-        return $this->belongsTo(Mode::class);
+        return $this->belongsTo(Prompt::class);
     }
 
     /**

@@ -6,7 +6,8 @@ ENV UID=33 \
     GID=33
 
 # Install system dependencies, PHP extensions, and clean up in single layer
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get clean && apt-get install -y \
+        build-essential \
         cron \
         curl \
         gifsicle \
@@ -22,8 +23,8 @@ RUN apt-get update && apt-get install -y \
         libuv1-dev \
         libxml2-dev \
         libzip-dev \
+        libicu-dev \
         nginx \
-        software-properties-common \
         supervisor \
         unzip \
         zip && \
@@ -62,6 +63,8 @@ RUN if [ "$APP_ENV" = "local" ]; then \
       pecl install xdebug && \
       docker-php-ext-enable xdebug; \
     fi
+
+RUN echo 'alias a="php artisan"' >> ~/.bashrc
 
 # Setup cron job
 COPY .docker/cron/cronjob /etc/cron.d/cronjob

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Telegram\Entities;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Spatie\LaravelData\Dto;
+use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
-final class Update extends Dto implements Arrayable
+final class Update extends Data
 {
     public function __construct(
         public int $update_id,
@@ -35,11 +34,4 @@ final class Update extends Dto implements Arrayable
         public Optional|ChatBoostUpdated $chat_boost,
         public Optional|ChatBoostRemoved $removed_chat_boost,
     ) {}
-
-    public function toArray(): array
-    {
-        // TODO: should return only non-Optional property values
-
-        return [];
-    }
 }

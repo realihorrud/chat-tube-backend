@@ -1,0 +1,379 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method App\\Supadata\\Entities\\Transcript\:\:text\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Actions/Telegram/GenerateResponseAction.php
+
+		-
+			message: '#^Class App\\Events\\VideoSummarized constructor invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Actions/Telegram/GenerateResponseAction.php
+
+		-
+			message: '#^Call to an undefined method App\\Models\\User\:\:requests\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Actions/UserRequest/CreateUserRequestAction.php
+
+		-
+			message: '#^Access to property \$data on an unknown class Telegram\\Bot\\Objects\\CallbackQuery\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/DTOs/ChooseModeDTO.php
+
+		-
+			message: '#^Access to property \$from on an unknown class Telegram\\Bot\\Objects\\CallbackQuery\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/DTOs/ChooseModeDTO.php
+
+		-
+			message: '#^Parameter \$callbackQuery of method App\\DTOs\\ChooseModeDTO\:\:fromCallbackQuery\(\) has invalid type Telegram\\Bot\\Objects\\CallbackQuery\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/DTOs/ChooseModeDTO.php
+
+		-
+			message: '#^Access to property \$chat on an unknown class Telegram\\Bot\\Objects\\Message\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/DTOs/GenerateResponseDTO.php
+
+		-
+			message: '#^Access to property \$from on an unknown class Telegram\\Bot\\Objects\\Message\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/DTOs/GenerateResponseDTO.php
+
+		-
+			message: '#^Access to property \$text on an unknown class Telegram\\Bot\\Objects\\Message\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/DTOs/GenerateResponseDTO.php
+
+		-
+			message: '#^Parameter \$message of method App\\DTOs\\GenerateResponseDTO\:\:fromMessage\(\) has invalid type Telegram\\Bot\\Objects\\Message\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/DTOs/GenerateResponseDTO.php
+
+		-
+			message: '#^Call to method sendMessage\(\) on an unknown class Telegram\\Bot\\Api\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Exceptions/BusinessException.php
+
+		-
+			message: '#^Class Telegram\\Bot\\Api not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Exceptions/BusinessException.php
+
+		-
+			message: '#^PHPDoc tag @throws with type Telegram\\Bot\\Exceptions\\TelegramSDKException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: app/Exceptions/BusinessException.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserVideoRequestController\:\:create\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserVideoRequestController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserVideoRequestController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserVideoRequestController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserVideoRequestController\:\:edit\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserVideoRequestController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserVideoRequestController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserVideoRequestController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserVideoRequestController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserVideoRequestController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserVideoRequestController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserVideoRequestController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\UserVideoRequestController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/UserVideoRequestController.php
+
+		-
+			message: '#^Instanceof between App\\Telegram\\Entities\\Update and App\\Telegram\\Entities\\CallbackQuery will always evaluate to false\.$#'
+			identifier: instanceof.alwaysFalse
+			count: 1
+			path: app/Http/Middleware/SetLocaleMiddleware.php
+
+		-
+			message: '#^Instanceof between App\\Telegram\\Entities\\User\|Spatie\\LaravelData\\Optional and App\\Models\\User will always evaluate to false\.$#'
+			identifier: instanceof.alwaysFalse
+			count: 1
+			path: app/Http/Middleware/SetLocaleMiddleware.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>language_code" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Middleware/SetLocaleMiddleware.php
+
+		-
+			message: '#^Method App\\Listeners\\LogUserActivity\:\:handle\(\) has Throwable in PHPDoc @throws tag but it''s not thrown\.$#'
+			identifier: throws.unusedType
+			count: 1
+			path: app/Listeners/LogUserActivity.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:settings\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasOne\<App\\Models\\User, \$this\(App\\Models\\User\)\> but returns Illuminate\\Database\\Eloquent\\Relations\\HasOne\<App\\Models\\UserSetting, \$this\(App\\Models\\User\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Access to property \$data on an unknown class Telegram\\Bot\\Objects\\CallbackQuery\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Strategies/CallbackActionStrategy.php
+
+		-
+			message: '#^Parameter \$callbackQuery of method App\\Strategies\\CallbackActionStrategy\:\:run\(\) has invalid type Telegram\\Bot\\Objects\\CallbackQuery\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Strategies/CallbackActionStrategy.php
+
+		-
+			message: '#^Method App\\Telegram\\ActualTelegramBotApi\:\:getWebhookInfo\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/ActualTelegramBotApi.php
+
+		-
+			message: '#^Method App\\Telegram\\ActualTelegramBotApi\:\:sendMessage\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 4
+			path: app/Telegram/ActualTelegramBotApi.php
+
+		-
+			message: '#^Parameter \#2 \$messageId of method App\\Telegram\\ActualTelegramBotApi\:\:deleteMessage\(\) expects int, array\<int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Telegram/ActualTelegramBotApi.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\BusinessMessageDeleted\:\:__construct\(\) has parameter \$message_ids with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/BusinessMessageDeleted.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\ChatShared\:\:__construct\(\) has parameter \$photo with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/ChatShared.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\ExternalReplyInfo\:\:__construct\(\) has parameter \$paid_media with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\ExternalReplyInfo\:\:__construct\(\) has parameter \$photo with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/ExternalReplyInfo.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Game\:\:__construct\(\) has parameter \$photo with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Game.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Game\:\:__construct\(\) has parameter \$text_entities with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Game.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Giveaway\:\:__construct\(\) has parameter \$chats with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Giveaway.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Giveaway\:\:__construct\(\) has parameter \$country_codes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Giveaway.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\GiveawayWinners\:\:__construct\(\) has parameter \$winners with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/GiveawayWinners.php
+
+		-
+			message: '#^Class App\\Telegram\\Entities\\InlineKeyboardButton implements generic interface Illuminate\\Contracts\\Support\\Arrayable but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Telegram/Entities/InlineKeyboardButton.php
+
+		-
+			message: '#^Class App\\Telegram\\Entities\\InlineKeyboardMarkup implements generic interface Illuminate\\Contracts\\Support\\Arrayable but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Telegram/Entities/InlineKeyboardMarkup.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\InlineKeyboardMarkup\:\:__construct\(\) has parameter \$inline_keyboard with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/InlineKeyboardMarkup.php
+
+		-
+			message: '#^Parameter \$callback of function array_map expects \(callable\(array\)\: mixed\)\|null, Closure\(App\\Telegram\\Entities\\InlineKeyboardButton\)\: array\<mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Telegram/Entities/InlineKeyboardMarkup.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Message\:\:__construct\(\) has parameter \$caption_entities with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Message.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Message\:\:__construct\(\) has parameter \$entities with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Message.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Message\:\:__construct\(\) has parameter \$new_chat_members with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Message.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Message\:\:__construct\(\) has parameter \$new_chat_photo with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Message.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Message\:\:__construct\(\) has parameter \$paid_media with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Message.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Message\:\:__construct\(\) has parameter \$photo with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Message.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\MessageReactionCountUpdated\:\:__construct\(\) has parameter \$reactions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/MessageReactionCountUpdated.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\MessageReactionUpdated\:\:__construct\(\) has parameter \$new_reaction with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/MessageReactionUpdated.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\MessageReactionUpdated\:\:__construct\(\) has parameter \$old_reaction with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/MessageReactionUpdated.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\PassportData\:\:__construct\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/PassportData.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Poll\:\:__construct\(\) has parameter \$explanation_entities with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Poll.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Poll\:\:__construct\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Poll.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\Poll\:\:__construct\(\) has parameter \$question_entities with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/Poll.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\PollAnswer\:\:__construct\(\) has parameter \$option_ids with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/PollAnswer.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\TextQuote\:\:__construct\(\) has parameter \$entities with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/TextQuote.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\UsersShared\:\:__construct\(\) has parameter \$users with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/UsersShared.php
+
+		-
+			message: '#^Method App\\Telegram\\Entities\\VideoChatParticipantsInvited\:\:__construct\(\) has parameter \$users with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/Entities/VideoChatParticipantsInvited.php
+
+		-
+			message: '#^Method App\\Telegram\\TelegramBotApi\:\:getMe\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/TelegramBotApi.php
+
+		-
+			message: '#^Method App\\Telegram\\TelegramBotApi\:\:getWebhookInfo\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Telegram/TelegramBotApi.php
+
+		-
+			message: '#^Method App\\Telegram\\TelegramBotApi\:\:sendMessage\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 4
+			path: app/Telegram/TelegramBotApi.php

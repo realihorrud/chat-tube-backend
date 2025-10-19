@@ -137,10 +137,18 @@ return [
             'replace_placeholders' => true,
         ],
 
-        'api' => [
+        'supadata' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/api.log'),
-            'level' => env('LOG_LEVEL', 'error'),
+            'path' => storage_path('logs/supadata.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
+        ],
+
+        'openai' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/openai.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
             'days' => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
         ],

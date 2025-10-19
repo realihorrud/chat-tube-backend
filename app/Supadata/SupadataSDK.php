@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Supadata;
 
-use App\Supadata\Services\Youtube;
-use GuzzleHttp\Client;
+use App\Supadata\Services\YoutubeService;
 
-final readonly class SupadataSDK
+final readonly class SupadataSdk
 {
-    public function __construct(private Client $client) {}
-
-    public function youtube(): Youtube
+    public function youtube(): YoutubeService
     {
-        return new Youtube($this->client);
+        return app(YoutubeService::class);
     }
 }
