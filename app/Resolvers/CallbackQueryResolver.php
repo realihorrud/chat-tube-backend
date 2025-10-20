@@ -31,12 +31,14 @@ final readonly class CallbackQueryResolver
             default => throw new RuntimeException('Undefined strategy for given callback data: '.$callbackQuery->data),
         };
 
-        /** @var PromptStrategy $promptStrategy */
+        /** @var PromptStrategy|CustomPrompt $promptStrategy */
         $promptStrategy = app($className);
 
         $promptStrategy->run($callbackQuery);
 
-        $this->sendWaitMessage($callbackQuery->message->chat->id, $callbackQuery->message->message_id);
+        if ($promptStrategy instanceof PromptStrategy) {
+            $this->sendWaitMessage($callbackQuery->message->chat->id, $callbackQuery->message->message_id);
+        }
     }
 
     private function sendWaitMessage(int $chatId, int $messageId): void
@@ -45,7 +47,8 @@ final readonly class CallbackQueryResolver
 
         $this->api->sendMessage([
             'chat_id' => $chatId,
-            'text' => "Adopt the pace of nature: her secret is patience \n (c) Ralph Waldo Emerson",
+            'text' => '_loading..._',
+            'parse_mode' => 'Markdown',
         ]);
     }
 }

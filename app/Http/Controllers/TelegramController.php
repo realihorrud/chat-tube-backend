@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Actions\Telegram\ChoosePromptAction;
 use App\Actions\UserVideoRequest\StoreUserVideoRequestAction;
 use App\DTOs\StoreUserVideoRequestDTO;
+use App\Models\User;
 use App\Resolvers\CallbackQueryResolver;
 use App\Resolvers\CommandsResolver;
 use App\Telegram\Entities\CallbackQuery;
@@ -40,6 +41,14 @@ final readonly class TelegramController
             message: 'update object',
             context: $update->toArray(),
         );
+
+        // TODO: $update->message->from is Optional!
+        if (! $update->message->from->is_bot) {
+            $user = User::query()->firstWhere('telegram_id', $update->message->from->id);
+            if ($user->states()->exists()) {
+                Log::info('user state is: ', [$user->states()->first()->state]);
+            }
+        }
 
         if ($update->callback_query instanceof CallbackQuery) {
             $callbackQueryResolver->resolve($update->callback_query);
