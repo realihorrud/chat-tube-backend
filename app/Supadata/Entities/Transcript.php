@@ -15,7 +15,7 @@ final class Transcript extends Entity
      * @param  string[]  $availableLangs
      */
     public function __construct(
-        public readonly string $content,
+        public readonly array|string $content,
         public readonly string $lang,
         public readonly array $availableLangs
     ) {}

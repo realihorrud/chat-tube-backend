@@ -6,10 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\Telegram\ChoosePromptAction;
 use App\Actions\UserVideoRequest\StoreUserVideoRequestAction;
-use App\DTOs\StoreUserVideoRequestDTO;
-use App\Models\User;
 use App\Resolvers\CallbackQueryResolver;
 use App\Resolvers\CommandsResolver;
+use App\Supadata\SupadataSDK;
 use App\Telegram\Entities\CallbackQuery;
 use App\Telegram\Entities\Update;
 use App\Telegram\TelegramBotApi;
@@ -33,7 +32,8 @@ final readonly class TelegramController
         CallbackQueryResolver $callbackQueryResolver,
         TelegramBotApi $api,
         ChoosePromptAction $choosePromptAction,
-        StoreUserVideoRequestAction $storeUserVideoRequestAction
+        StoreUserVideoRequestAction $storeUserVideoRequestAction,
+        SupadataSDK $supadataSDK,
     ): JsonResponse {
         $update = Update::from($request->all());
 
@@ -42,14 +42,6 @@ final readonly class TelegramController
             context: $update->toArray(),
         );
 
-        // TODO: $update->message->from is Optional!
-        if (! $update->message->from->is_bot) {
-            $user = User::query()->firstWhere('telegram_id', $update->message->from->id);
-            if ($user->states()->exists()) {
-                Log::info('user state is: ', [$user->states()->first()->state]);
-            }
-        }
-
         if ($update->callback_query instanceof CallbackQuery) {
             $callbackQueryResolver->resolve($update->callback_query);
 
@@ -57,7 +49,6 @@ final readonly class TelegramController
         }
 
         // If starts with slash than treat it as /command-name
-
         if (is_string($update->message->text) && str_starts_with($update->message->text, '/')) {
             $commandsResolver->resolve($update);
 
@@ -67,10 +58,9 @@ final readonly class TelegramController
         if (! $update->message->text instanceof Optional) {
             Assert::string($update->message->text);
             try {
-                YoutubeUrl::fromString($update->message->text);
+                $transcript = $supadataSDK->youtube()->transcript(YoutubeUrl::fromString($update->message->text));
 
-                $storeUserVideoRequestAction->run(StoreUserVideoRequestDTO::fromUpdate($update));
-                $choosePromptAction->handle($update->message->chat->id);
+                Log::info('Transcript received', [$transcript]);
 
                 return response()->json();
             } catch (InvalidArgumentException $exception) {

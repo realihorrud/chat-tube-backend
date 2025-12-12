@@ -8,7 +8,7 @@ use App\DTOs\GenerateResponseDTO;
 use App\Events\VideoSummarized;
 use App\Exceptions\CouldNotGenerateResponseException;
 use App\Models\User;
-use App\Supadata\SupadataSdk;
+use App\Supadata\SupadataSDK;
 use App\ValueObjects\YoutubeUrl;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +18,7 @@ use RuntimeException;
 
 final readonly class GenerateResponseAction
 {
-    public function __construct(private SupadataSdk $supadataSDK, private Client $client) {}
+    public function __construct(private SupadataSDK $supadataSDK, private Client $client) {}
 
     public function run(GenerateResponseDTO $dto): ?string
     {

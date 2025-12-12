@@ -28,7 +28,7 @@ final readonly class YoutubeService
      * @throws ConnectionException
      * @throws RequestException
      */
-    public function transcript(YoutubeUrl $url, ?string $lang = null, ?string $mode = null): Transcript
+    public function transcript(YoutubeUrl $url, ?string $lang = null, ?string $mode = null, bool $text = false): Transcript
     {
         $response = Http::baseUrl($this->baseUrl)->withHeaders([
             'x-api-key' => $this->apiKey,
@@ -36,7 +36,7 @@ final readonly class YoutubeService
             'url' => $url->value(),
             'lang' => $lang,
             'mode' => $mode,
-            'text' => json_encode(true),
+            'text' => json_encode($text),
         ])->throw()->json();
 
         return Transcript::from($response);
