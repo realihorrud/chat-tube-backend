@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $username
  * @property string|null $language_code
  * @property-read UserSetting|null $settings
+ * @property-read Collection<int, UserState> $states
+ * @property-read int|null $states_count
  * @property-read Collection<int, UserVideoRequest> $videoRequests
  * @property-read int|null $video_requests_count
  *
@@ -55,5 +57,13 @@ final class User extends Model
     public function videoRequests(): HasMany
     {
         return $this->hasMany(UserVideoRequest::class);
+    }
+
+    /**
+     * @return HasMany<UserState, $this>
+     */
+    public function states(): HasMany
+    {
+        return $this->hasMany(UserState::class);
     }
 }

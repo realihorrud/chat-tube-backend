@@ -6,7 +6,7 @@ namespace App\Supadata;
 
 use App\Supadata\Services\YoutubeService;
 
-final readonly class SupadataSdk
+final readonly class SupadataSDK
 {
     public function youtube(): YoutubeService
     {

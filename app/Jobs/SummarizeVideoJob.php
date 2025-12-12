@@ -7,7 +7,7 @@ namespace App\Jobs;
 use App\Events\VideoSummarized;
 use App\Models\Prompt;
 use App\Models\UserVideoRequest;
-use App\Supadata\SupadataSdk;
+use App\Supadata\SupadataSDK;
 use App\Telegram\TelegramBotApi;
 use App\ValueObjects\YoutubeUrl;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -27,7 +27,7 @@ final class SummarizeVideoJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(Client $openAI, SupadataSdk $supadataSdk, TelegramBotApi $telegramBotApi): void
+    public function handle(Client $openAI, SupadataSDK $supadataSdk, TelegramBotApi $telegramBotApi): void
     {
         $transcript = $supadataSdk->youtube()->transcript(YoutubeUrl::fromString($this->userVideoRequest->video_url));
 
