@@ -13,4 +13,5 @@ return [
     'start' => $startCommand,
     'choose_mode' => 'Choose the preferable prompt 🤖',
     'choose_mode_saved' => '✅ Mode selected. Ready to summarize your video!',
+    'video_processing' => '_Video is being processed... It may take up to 30 seconds._',
 ];

@@ -8,7 +8,7 @@ use App\Enums\UserStateStatus;
 use App\Models\User;
 use App\Models\UserState;
 
-final class UserStateService
+final class UserStatesService
 {
     public function createUserState(int $telegramId, UserStateStatus $status): int
     {

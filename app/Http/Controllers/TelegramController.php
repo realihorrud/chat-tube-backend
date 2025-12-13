@@ -4,72 +4,43 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\Telegram\ChoosePromptAction;
-use App\Actions\UserVideoRequest\StoreUserVideoRequestAction;
-use App\Resolvers\CallbackQueryResolver;
-use App\Resolvers\CommandsResolver;
-use App\Supadata\SupadataSDK;
-use App\Telegram\Entities\CallbackQuery;
+use App\Handlers\CallbackHandler;
+use App\Handlers\ClearCommandHandler;
+use App\Handlers\NotFoundHandler;
+use App\Handlers\StartCommandHandler;
+use App\Handlers\YoutubeUrlHandler;
 use App\Telegram\Entities\Update;
-use App\Telegram\TelegramBotApi;
-use App\ValueObjects\YoutubeUrl;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use InvalidArgumentException;
-use Spatie\LaravelData\Optional;
 use Throwable;
-use Webmozart\Assert\Assert;
 
 final readonly class TelegramController
 {
     /**
      * @throws Throwable
      */
-    public function __invoke(
-        Request $request,
-        CommandsResolver $commandsResolver,
-        CallbackQueryResolver $callbackQueryResolver,
-        TelegramBotApi $api,
-        ChoosePromptAction $choosePromptAction,
-        StoreUserVideoRequestAction $storeUserVideoRequestAction,
-        SupadataSDK $supadataSDK,
-    ): JsonResponse {
-        $update = Update::from($request->all());
+    public function __invoke(Request $request): JsonResponse
+    {
+        // CoR pattern ✅
+        // State pattern
+        // 1. User sends YouTube video link. ✅
+        // 1.1 Tell the user that we are processing the video. ✅
+        // 2. We get the transcript. ✅
+        // 3. We create a vector representation of the transcript. ✅
+        // 3.1 Create a TEXT file with transcript. ✅
+        // 4. We store metadata about the video and id of vector representation which represents that video. ✅
+        // 5. We reply to user with the following message: "Video has been processed. Ask anything about this video!" ✅
+        // 5.1 State should be implemented here at this point...
+        // 6. User keeps asking questions until /clear command...
+        // 6.1 Create a clear command handler...
 
-        Log::info(
-            message: 'update object',
-            context: $update->toArray(),
-        );
+        $handler = app(YoutubeUrlHandler::class)
+            ->setNextHandler(app(StartCommandHandler::class))
+            ->setNextHandler(app(ClearCommandHandler::class))
+            ->setNextHandler(app(CallbackHandler::class))
+            ->setNextHandler(app(NotFoundHandler::class));
 
-        if ($update->callback_query instanceof CallbackQuery) {
-            $callbackQueryResolver->resolve($update->callback_query);
-
-            return response()->json();
-        }
-
-        // If starts with slash than treat it as /command-name
-        if (is_string($update->message->text) && str_starts_with($update->message->text, '/')) {
-            $commandsResolver->resolve($update);
-
-            return response()->json();
-        }
-
-        if (! $update->message->text instanceof Optional) {
-            Assert::string($update->message->text);
-            try {
-                $transcript = $supadataSDK->youtube()->transcript(YoutubeUrl::fromString($update->message->text));
-
-                Log::info('Transcript received', [$transcript]);
-
-                return response()->json();
-            } catch (InvalidArgumentException $exception) {
-                $api->sendMessage([
-                    'chat_id' => $update->message->chat->id,
-                    'text' => $exception->getMessage(),
-                ]);
-            }
-        }
+        $handler->handle(Update::from($request->all()));
 
         return response()->json(['ok' => true]);
     }

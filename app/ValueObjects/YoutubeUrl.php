@@ -34,4 +34,9 @@ final readonly class YoutubeUrl
 
         return 'https://youtube.com/watch?v='.$this->url;
     }
+
+    public function toUrl(): Url
+    {
+        return Url::fromString($this->url);
+    }
 }

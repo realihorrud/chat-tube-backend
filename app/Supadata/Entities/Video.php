@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Supadata\Entities;
 
-use App\Entities\Entity;
+use Spatie\LaravelData\Dto;
 
-final class Video extends Entity
+final class Video extends Dto
 {
     /**
      * @param  array{id: string, name: string}  $channel

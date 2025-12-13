@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Supadata\Services;
 
-use App\Supadata\Entities\Video;
-use App\ValueObjects\YoutubeVideoId;
+use App\Supadata\Entities\Metadata;
+use App\ValueObjects\Url;
 use Illuminate\Container\Attributes\Config;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
-final readonly class YoutubeService
+final readonly class UniversalMetadataService
 {
     public function __construct(
         #[Config('services.supadata.base_uri')]
@@ -21,17 +21,17 @@ final readonly class YoutubeService
     ) {}
 
     /**
-     * @see https://docs.supadata.ai/youtube/video
+     * @see https://docs.supadata.ai/get-transcript
      *
      * @throws ConnectionException
      * @throws RequestException
      */
-    public function videoMetadata(YoutubeVideoId $videoId): Video
+    public function getMetadata(Url $url): Metadata
     {
         $response = Http::baseUrl($this->baseUrl)->withHeaders([
             'x-api-key' => $this->apiKey,
-        ])->get('youtube/video', ['id' => $videoId->value()])->throw()->json();
+        ])->get('metadata', ['url' => $url->value()])->throw()->json();
 
-        return Video::from($response);
+        return Metadata::from($response);
     }
 }

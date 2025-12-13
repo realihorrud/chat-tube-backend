@@ -10,13 +10,13 @@ use App\Enums\UserVideoRequestStatus;
 use App\Models\Prompt;
 use App\Models\User;
 use App\Models\UserVideoRequest;
-use App\Services\UserStateService;
+use App\Services\UserStatesService;
 use App\Telegram\Entities\CallbackQuery;
 use App\Telegram\TelegramBotApi;
 
 final readonly class CustomPrompt
 {
-    public function __construct(private TelegramBotApi $api, private UserStateService $userStateService) {}
+    public function __construct(private TelegramBotApi $api, private UserStatesService $userStateService) {}
 
     public function run(CallbackQuery $callbackQuery): void
     {
