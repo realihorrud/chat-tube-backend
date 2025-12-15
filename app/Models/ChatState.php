@@ -47,6 +47,9 @@ final class ChatState extends Model
         return $this->belongsTo(User::class, 'telegram_id', 'chat_id');
     }
 
+    /**
+     * @param  Builder<ChatState>  $query
+     */
     #[Scope]
     protected function byChatId(Builder $query, int $chatId): void
     {

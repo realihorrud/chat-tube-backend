@@ -9,7 +9,7 @@ use App\Supadata\Entities\Metadata;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-final class YouTubeVideosService
+final class YoutubeVideosService
 {
     /**
      * @throws Throwable

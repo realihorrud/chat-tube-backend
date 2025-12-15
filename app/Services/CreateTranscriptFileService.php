@@ -35,6 +35,7 @@ EOT;
 
     private function getTimestamps(Transcript $transcript): string
     {
+        /** @var array{string} $timestamps */
         $timestamps = [];
 
         if (is_string($transcript->content)) {
@@ -47,13 +48,14 @@ EOT;
         foreach ($timestamps as &$timestamp) {
             $timestamp = implode(' - ', $timestamp);
         }
+        /** @var array{string} $timestamps */
 
         return implode("\n", $timestamps);
     }
 
-    private function calculateTimestamp(int $offset): string
+    private function calculateTimestamp(float $offset): string
     {
-        $seconds = round($offset / 1000);
+        $seconds = (int) round($offset / 1000);
 
         return gmdate('H:i:s', $seconds);
     }

@@ -23,6 +23,7 @@ final class Metadata extends Dto
         /** @var string[] $tags */
         public array $tags,
         public string $createdAt,
+        /** @var array<string, mixed> $additionalData */
         public array $additionalData,
     ) {}
 }

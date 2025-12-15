@@ -7,7 +7,7 @@ namespace App\Jobs;
 use App\Events\VideoProcessed;
 use App\Models\YoutubeVideo;
 use App\Services\CreateTranscriptFileService;
-use App\Services\YouTubeVideosService;
+use App\Services\YoutubeVideosService;
 use App\Supadata\Entities\Metadata;
 use App\Supadata\Entities\Transcript;
 use App\Supadata\SupadataSDK;
@@ -37,7 +37,7 @@ final class ProcessVideo implements ShouldQueue
     public function handle(
         TelegramBotApi $api,
         SupadataSDK $sdk,
-        YouTubeVideosService $youtubeVideosService,
+        YoutubeVideosService $youtubeVideosService,
         CreateTranscriptFileService $createTranscriptFileService,
         Client $client
     ): void {

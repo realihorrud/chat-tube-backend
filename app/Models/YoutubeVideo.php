@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $title
  * @property string|null $description
  * @property array<array-key, mixed> $tags
- * @property object $additional_data
+ * @property array<array-key, mixed> $additional_data
  * @property string $uploaded_at
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
@@ -46,7 +46,7 @@ final class YoutubeVideo extends Model
 {
     protected $casts = [
         'tags' => 'array',
-        'additional_data' => 'object',
+        'additional_data' => 'array',
     ];
 
     /**

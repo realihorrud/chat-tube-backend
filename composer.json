@@ -1,12 +1,8 @@
 {
-    "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "realihorrud/ai-summarizer-bot",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": [
-        "laravel",
-        "framework"
-    ],
+    "description": "Chat with Video",
+    "keywords": [],
     "license": "MIT",
     "require": {
         "php": "^8.4",
@@ -68,7 +64,6 @@
         "test:lint": "pint --test",
         "test:refactor": "rector --dry-run",
         "test:types": "phpstan analyse",
-        "test:arch": "pest --filter=arch",
         "test": [
             "@test:lint",
             "@test:refactor",

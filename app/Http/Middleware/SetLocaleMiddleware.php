@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Telegram\Entities\CallbackQuery;
 use App\Telegram\Entities\Message;
 use App\Telegram\Entities\Update;
+use App\Telegram\Entities\User as TelegramUser;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -23,7 +24,7 @@ final class SetLocaleMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $update = Update::from($request->all());
-        if ($update instanceof CallbackQuery) {
+        if ($update->callback_query instanceof CallbackQuery) {
             return $next($request);
         }
 
@@ -33,11 +34,11 @@ final class SetLocaleMiddleware
                 ->first();
 
             $language = 'en';
-            if ($update->message->from instanceof User) {
+            if ($update->message->from instanceof TelegramUser) {
                 $language = $update->message->from->language_code;
             }
 
-            App::setLocale($user?->language_code ?? $language);
+            App::setLocale($user->language_code ?? $language);
         }
 
         return $next($request);

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Handlers\CallbackHandler;
 use App\Handlers\StartCommandHandler;
 use App\Handlers\YoutubeUrlHandler;
-use App\Resolvers\CallbackQueryResolver;
 use App\Services\ChatStatesService;
 use App\Services\UsersService;
 use App\Telegram\ActualTelegramBotApi;
@@ -116,10 +114,6 @@ final class AppServiceProvider extends ServiceProvider
                 usersService: $this->app->make(UsersService::class),
                 chatStatesService: $this->app->make(ChatStatesService::class),
             );
-        });
-
-        $this->app->singleton(CallbackHandler::class, function () {
-            return new CallbackHandler($this->app->make(CallbackQueryResolver::class));
         });
     }
 }

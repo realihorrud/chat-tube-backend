@@ -7,9 +7,7 @@ namespace App\Models;
 use Carbon\CarbonImmutable;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -22,11 +20,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $username
  * @property string|null $language_code
  * @property-read ChatState|null $chatState
- * @property-read UserSetting|null $settings
- * @property-read Collection<int, UserState> $states
- * @property-read int|null $states_count
- * @property-read Collection<int, UserVideoRequest> $videoRequests
- * @property-read int|null $video_requests_count
  *
  * @method static Builder<static>|User newModelQuery()
  * @method static Builder<static>|User newQuery()
@@ -44,30 +37,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 final class User extends Model
 {
-    /**
-     * @return HasOne<User, $this>
-     */
-    public function settings(): HasOne
-    {
-        return $this->hasOne(UserSetting::class);
-    }
-
-    /**
-     * @return HasMany<UserVideoRequest, $this>
-     */
-    public function videoRequests(): HasMany
-    {
-        return $this->hasMany(UserVideoRequest::class);
-    }
-
-    /**
-     * @return HasMany<UserState, $this>
-     */
-    public function states(): HasMany
-    {
-        return $this->hasMany(UserState::class);
-    }
-
     /**
      * @return HasOne<ChatState, $this>
      */

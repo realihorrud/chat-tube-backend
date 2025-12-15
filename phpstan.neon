@@ -9,3 +9,5 @@ parameters:
         - config
         - bootstrap
         - routes
+    excludePaths:
+        - app/Telegram/*
