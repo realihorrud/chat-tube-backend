@@ -34,11 +34,12 @@ final class StartCommandHandler extends Handler
         if (! $update->message instanceof Optional && $update->message->text === self::COMMAND) {
             Assert::isInstanceOf($update->message->from, User::class);
 
-            $user = $this->usersService->createOrUpdate($update->message->from);
+            $this->usersService->createOrUpdate($update->message->from);
 
             $this->chatStatesService->updateOrCreateState(UpdateOrCreateChatStateDTO::from([
+                'chat_id' => $update->message->chat->id,
                 'state' => State::Idle,
-                'update' => $update,
+                'last_update' => $update,
             ]));
 
             $this->api->sendMessage(['chat_id' => $update->message->chat->id, 'text' => __('messages.start')]);

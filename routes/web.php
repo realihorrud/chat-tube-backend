@@ -12,4 +12,5 @@ Route::get('/', function () {
 
 Route::post(sprintf('/%s/webhook', config('services.telegram.bot_token')), TelegramController::class)
     ->name('telegram.webhook')
-    ->middleware(SetLocaleMiddleware::class);
+    ->middleware(SetLocaleMiddleware::class)
+    ->withoutMiddleware('web');

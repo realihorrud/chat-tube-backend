@@ -7,6 +7,7 @@ namespace App\Services;
 use App\DTOs\ChatState\UpdateOrCreateChatStateDTO;
 use App\Models\ChatState;
 use Illuminate\Support\Facades\DB;
+use Spatie\LaravelData\Optional;
 use Throwable;
 
 final class ChatStatesService
@@ -17,10 +18,13 @@ final class ChatStatesService
     public function updateOrCreateState(UpdateOrCreateChatStateDTO $dto): void
     {
         DB::transaction(function () use ($dto): void {
-            ChatState::query()->updateOrCreate(['chat_id' => $dto->update->message->chat->id], [
+            $values = [
                 'state' => $dto->state,
-                'last_update' => $dto->update,
-            ]);
+            ];
+            if (! $dto->last_update instanceof Optional) {
+                $values['last_update'] = $dto->last_update;
+            }
+            ChatState::query()->updateOrCreate(['chat_id' => $dto->chat_id], $values);
         });
     }
 }

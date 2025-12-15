@@ -27,7 +27,8 @@ final class ProcessVideo implements ShouldQueue
     public function __construct(
         public readonly int $chatId,
         public readonly YoutubeUrl $videoUrl,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws \Illuminate\Http\Client\ConnectionException
@@ -41,11 +42,7 @@ final class ProcessVideo implements ShouldQueue
         CreateTranscriptFileService $createTranscriptFileService,
         Client $client
     ): void {
-        $api->sendMessage([
-            'chat_id' => $this->chatId,
-            'text' => 'Processing video...',
-            'parse_mode' => 'Markdown',
-        ]);
+        $this->sendWaitingMessage($api);
 
         $transcript = $sdk->universalTranscript()->getTranscript($this->videoUrl);
         $metadata = $sdk->universalMetadata()->getMetadata($this->videoUrl->toUrl());
@@ -57,6 +54,15 @@ final class ProcessVideo implements ShouldQueue
         $youtubeVideosService->saveYoutubeVideo($vectorStoreId, $file->id, $metadata);
 
         event(new VideoProcessed($this->chatId));
+    }
+
+    private function sendWaitingMessage(TelegramBotApi $api): void
+    {
+        $api->sendMessage([
+            'chat_id' => $this->chatId,
+            'text' => 'Processing video...',
+            'parse_mode' => 'Markdown',
+        ]);
     }
 
     private function uploadFile(

@@ -105,7 +105,7 @@ final class AppServiceProvider extends ServiceProvider
     private function registerHandlers(): void
     {
         $this->app->singleton(YoutubeUrlHandler::class, function () {
-            return new YoutubeUrlHandler($this->app->make(TelegramBotApi::class));
+            return new YoutubeUrlHandler($this->app->make(TelegramBotApi::class), $this->app->make(ChatStatesService::class));
         });
 
         $this->app->singleton(StartCommandHandler::class, function () {
