@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Handlers;
 
 use App\Jobs\ProcessVideo;
+use App\Models\ChatState;
 use App\Telegram\Entities\Update;
 use App\Telegram\TelegramBotApi;
 use App\ValueObjects\YoutubeUrl;
-use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Spatie\LaravelData\Optional;
 use Webmozart\Assert\Assert;
@@ -17,10 +17,9 @@ final class YoutubeUrlHandler extends Handler
 {
     public function __construct(private readonly TelegramBotApi $api) {}
 
-    public function handle(Update $update): void
+    public function handle(Update $update, ?ChatState $state): void
     {
-        Log::debug(__CLASS__);
-        if (! $update->message->text instanceof Optional) {
+        if (! $update->message instanceof Optional && YoutubeUrl::isValid($update->message->text)) {
             Assert::string($update->message->text);
 
             try {
@@ -46,6 +45,6 @@ final class YoutubeUrlHandler extends Handler
             return;
         }
 
-        parent::handle($update);
+        parent::handle($update, $state);
     }
 }

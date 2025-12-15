@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $last_name
  * @property string|null $username
  * @property string|null $language_code
+ * @property-read ChatState|null $chatState
  * @property-read UserSetting|null $settings
  * @property-read Collection<int, UserState> $states
  * @property-read int|null $states_count
@@ -65,5 +66,13 @@ final class User extends Model
     public function states(): HasMany
     {
         return $this->hasMany(UserState::class);
+    }
+
+    /**
+     * @return HasOne<ChatState, $this>
+     */
+    public function chatState(): HasOne
+    {
+        return $this->hasOne(ChatState::class, 'chat_id', 'telegram_id');
     }
 }

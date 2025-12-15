@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Actions\User\CreateOrUpdateUserAction;
 use App\Handlers\CallbackHandler;
-use App\Handlers\ClearCommandHandler;
-use App\Handlers\NotFoundHandler;
 use App\Handlers\StartCommandHandler;
 use App\Handlers\YoutubeUrlHandler;
 use App\Resolvers\CallbackQueryResolver;
+use App\Services\ChatStatesService;
+use App\Services\UsersService;
 use App\Telegram\ActualTelegramBotApi;
 use App\Telegram\TelegramBotApi;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -115,20 +113,13 @@ final class AppServiceProvider extends ServiceProvider
         $this->app->singleton(StartCommandHandler::class, function () {
             return new StartCommandHandler(
                 api: $this->app->make(TelegramBotApi::class),
-                action: $this->app->make(CreateOrUpdateUserAction::class)
+                usersService: $this->app->make(UsersService::class),
+                chatStatesService: $this->app->make(ChatStatesService::class),
             );
-        });
-
-        $this->app->singleton(ClearCommandHandler::class, function () {
-            return new ClearCommandHandler();
         });
 
         $this->app->singleton(CallbackHandler::class, function () {
             return new CallbackHandler($this->app->make(CallbackQueryResolver::class));
-        });
-
-        $this->app->singleton(NotFoundHandler::class, function () {
-            return new NotFoundHandler();
         });
     }
 }

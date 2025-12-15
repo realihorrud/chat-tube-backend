@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handlers;
 
+use App\Models\ChatState;
 use App\Telegram\Entities\Update;
 use LogicException;
 
@@ -15,15 +16,15 @@ abstract class Handler
     {
         $this->nextHandler = $handler;
 
-        return $this;
+        return $handler;
     }
 
-    public function handle(Update $update): void
+    public function handle(Update $update, ?ChatState $state): void
     {
         if (! $this->nextHandler) {
             throw new LogicException('No next handler set.');
         }
 
-        $this->nextHandler->handle($update);
+        $this->nextHandler->handle($update, $state);
     }
 }

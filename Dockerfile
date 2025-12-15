@@ -31,7 +31,7 @@ RUN apt-get update && apt-get clean && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     pecl install channel://pecl.php.net/uv-0.3.0 && \
-    docker-php-ext-install bcmath exif intl mbstring opcache pcntl pdo pdo_sqlite sodium xml zip && \
+    docker-php-ext-install bcmath exif intl mbstring opcache pcntl pdo pdo_pgsql sodium xml zip && \
     docker-php-ext-enable opcache pcntl uv && \
     mkdir -p /var/www/html
 

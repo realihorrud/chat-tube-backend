@@ -18,7 +18,6 @@ use Illuminate\Foundation\Queue\Queueable;
 use OpenAI\Client;
 use OpenAI\Responses\Files\CreateResponse;
 use OpenAI\Responses\VectorStores\Files\VectorStoreFileResponse;
-use OpenAI\Responses\VectorStores\VectorStoreResponse;
 use Throwable;
 
 final class ProcessVideo implements ShouldQueue

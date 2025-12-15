@@ -26,6 +26,17 @@ final readonly class YoutubeUrl
         return new self($url);
     }
 
+    public static function isValid(string $url): bool
+    {
+        try {
+            new self($url);
+
+            return true;
+        } catch (InvalidArgumentException) {
+            return false;
+        }
+    }
+
     public function value(): string
     {
         if (str_contains('http', $this->url)) {
