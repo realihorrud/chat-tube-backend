@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\Events\VideoProcessed;
-use App\Models\YoutubeVideo;
 use App\Services\CreateTranscriptFileService;
 use App\Services\YoutubeVideosService;
-use App\Supadata\Entities\Metadata;
-use App\Supadata\Entities\Transcript;
 use App\Supadata\SupadataSDK;
 use App\Telegram\TelegramBotApi;
 use App\ValueObjects\YoutubeUrl;
@@ -27,8 +24,7 @@ final class ProcessVideo implements ShouldQueue
     public function __construct(
         public readonly int $chatId,
         public readonly YoutubeUrl $videoUrl,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Illuminate\Http\Client\ConnectionException
@@ -73,7 +69,7 @@ final class ProcessVideo implements ShouldQueue
     ): CreateResponse {
         return $client->files()->upload([
             'file' => fopen($filename, 'r'),
-            'purpose' => 'assistants'
+            'purpose' => 'assistants',
         ]);
     }
 

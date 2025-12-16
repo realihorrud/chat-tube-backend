@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $video_id
  * @property string $url
  * @property string|null $title
- * @property string|null $description
+ * @property string $description
  * @property array<array-key, mixed> $tags
  * @property array<array-key, mixed> $additional_data
  * @property string $uploaded_at

@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $id
  * @property string $display_name
- * @property string $username
- * @property string $avatar_url
- * @property bool $verified
+ * @property string|null $username
+ * @property string|null $avatar_url
+ * @property bool|null $verified
  * @property int $youtube_video_id
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
