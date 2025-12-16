@@ -19,7 +19,7 @@ final class CreateTranscriptFileService
         fwrite($file, $this->getFileContent($metadata, $transcript));
         fclose($file);
 
-        return file_get_contents($filename);
+        return $filename;
     }
 
     private function getFileContent(Metadata $metadata, Transcript $transcript): string

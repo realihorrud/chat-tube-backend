@@ -47,8 +47,10 @@ final class ProcessVideo implements ShouldQueue
         $transcript = $sdk->universalTranscript()->getTranscript($this->videoUrl);
         $metadata = $sdk->universalMetadata()->getMetadata($this->videoUrl->toUrl());
 
-        $file = $this->uploadFile($metadata, $transcript, $client, $createTranscriptFileService);
-        $vectorStoreId = $this->findOrCreateVectorStore($client);
+        $filename = $createTranscriptFileService->handle($metadata, $transcript);
+        $file = $this->uploadFile($client, $filename);
+
+        $vectorStoreId = $client->vectorStores()->create(['name' => md5($metadata->title)])->id;
         $this->addFileToVectorStore($client, $vectorStoreId, $file);
 
         $youtubeVideosService->saveYoutubeVideo($vectorStoreId, $file->id, $metadata);
@@ -66,24 +68,13 @@ final class ProcessVideo implements ShouldQueue
     }
 
     private function uploadFile(
-        Metadata $metadata,
-        Transcript $transcript,
         Client $client,
-        CreateTranscriptFileService $createTranscriptFileService
+        string $filename,
     ): CreateResponse {
-        $transcriptFileContent = $createTranscriptFileService->handle($metadata, $transcript);
-
-        return $client->files()->upload(['file' => $transcriptFileContent, 'purpose' => 'assistants']);
-    }
-
-    private function findOrCreateVectorStore(Client $client): string
-    {
-        $firstYoutubeVideo = YoutubeVideo::query()->first();
-        if (blank($firstYoutubeVideo)) {
-            return $client->vectorStores()->create(['name' => 'Youtube Videos'])->id;
-        }
-
-        return $firstYoutubeVideo->vector_store_id;
+        return $client->files()->upload([
+            'file' => fopen($filename, 'r'),
+            'purpose' => 'assistants'
+        ]);
     }
 
     private function addFileToVectorStore(

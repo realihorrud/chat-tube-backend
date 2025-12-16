@@ -28,6 +28,7 @@ final class YoutubeVideosService
             $youtubeVideo->additional_data = $metadata->additionalData;
             $youtubeVideo->uploaded_at = $metadata->createdAt;
             $youtubeVideo->save();
+            // Implement storing of other entities like: YoutubeVideoStat, etc.
         });
     }
 }
