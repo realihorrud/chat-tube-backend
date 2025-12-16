@@ -51,5 +51,8 @@ return [
         'base_uri' => env('OPENAI_BASE_URI'),
         'api_key' => env('OPENAI_API_KEY'),
         'model' => 'gpt-4.1',
+        'vector_stores' => [
+            'expires_in_days' => 30,
+        ],
     ],
 ];

@@ -10,6 +10,7 @@ use App\Services\YoutubeVideosService;
 use App\Supadata\SupadataSDK;
 use App\Telegram\TelegramBotApi;
 use App\ValueObjects\YoutubeUrl;
+use Illuminate\Container\Attributes\Config;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use OpenAI\Client;
@@ -36,7 +37,9 @@ final class ProcessVideo implements ShouldQueue
         SupadataSDK $sdk,
         YoutubeVideosService $youtubeVideosService,
         CreateTranscriptFileService $createTranscriptFileService,
-        Client $client
+        Client $client,
+        #[Config('services.open_ai.vector_stores.expires_in_days')]
+        int $expiresInDays,
     ): void {
         $this->sendWaitingMessage($api);
 
@@ -46,7 +49,15 @@ final class ProcessVideo implements ShouldQueue
         $filename = $createTranscriptFileService->handle($metadata, $transcript);
         $file = $this->uploadFile($client, $filename);
 
-        $vectorStoreId = $client->vectorStores()->create(['name' => md5($metadata->title)])->id;
+        $vectorStoreId = $client->vectorStores()->create(
+            parameters: [
+                'name' => $metadata->id,
+                'expires_after' => [
+                    'anchor' => 'last_active_at',
+                    'days' => $expiresInDays,
+                ],
+            ],
+        )->id;
         $this->addFileToVectorStore($client, $vectorStoreId, $file);
 
         $youtubeVideosService->saveYoutubeVideo($vectorStoreId, $file->id, $metadata);
