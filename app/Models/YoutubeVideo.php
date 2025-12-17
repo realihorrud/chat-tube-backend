@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -20,25 +22,28 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $uploaded_at
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property int|null $chat_id
  * @property-read YoutubeVideoAuthor|null $author
  * @property-read YoutubeVideoMedia|null $media
  * @property-read YoutubeVideoStat|null $stats
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereAdditionalData($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereFileId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereTags($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereUploadedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereVectorStoreId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|YoutubeVideo whereVideoId($value)
+ * @method static Builder<static>|YoutubeVideo latestUploadedVideo(int $chatId)
+ * @method static Builder<static>|YoutubeVideo newModelQuery()
+ * @method static Builder<static>|YoutubeVideo newQuery()
+ * @method static Builder<static>|YoutubeVideo query()
+ * @method static Builder<static>|YoutubeVideo whereAdditionalData($value)
+ * @method static Builder<static>|YoutubeVideo whereChatId($value)
+ * @method static Builder<static>|YoutubeVideo whereCreatedAt($value)
+ * @method static Builder<static>|YoutubeVideo whereDescription($value)
+ * @method static Builder<static>|YoutubeVideo whereFileId($value)
+ * @method static Builder<static>|YoutubeVideo whereId($value)
+ * @method static Builder<static>|YoutubeVideo whereTags($value)
+ * @method static Builder<static>|YoutubeVideo whereTitle($value)
+ * @method static Builder<static>|YoutubeVideo whereUpdatedAt($value)
+ * @method static Builder<static>|YoutubeVideo whereUploadedAt($value)
+ * @method static Builder<static>|YoutubeVideo whereUrl($value)
+ * @method static Builder<static>|YoutubeVideo whereVectorStoreId($value)
+ * @method static Builder<static>|YoutubeVideo whereVideoId($value)
  *
  * @mixin \Eloquent
  */
@@ -71,5 +76,14 @@ final class YoutubeVideo extends Model
     public function media(): HasOne
     {
         return $this->hasOne(YoutubeVideoMedia::class);
+    }
+
+    /**
+     * @param  Builder<YoutubeVideo>  $query
+     */
+    #[Scope]
+    protected function latestUploadedVideo(Builder $query, int $chatId): void
+    {
+        $query->where('chat_id', $chatId)->latest();
     }
 }

@@ -27,7 +27,7 @@ final readonly class SendVideoProcessedNotification
 
         $this->api->sendMessage([
             'chat_id' => $event->chatId,
-            'text' => 'Ask anything about this video!',
+            'text' => 'Ask anything about this video until /clear command is entered.',
             'parse_mode' => 'Markdown',
         ]);
     }

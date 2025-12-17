@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Supadata\Entities\Item;
 use App\Supadata\Enums\TypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Collection;
 
 /**
  * @property int $id
  * @property int|null $duration
  * @property string|null $thumbnail_url
  * @property string|null $url
- * @property Collection<int, Item> $items
+ * @property array<array-key, mixed>|null $items
  * @property int $youtube_video_id
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at

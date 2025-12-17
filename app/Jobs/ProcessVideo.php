@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\DTOs\YoutubeVideo\YoutubeVideoDTO;
 use App\Events\VideoProcessed;
 use App\Services\CreateTranscriptFileService;
 use App\Services\YoutubeVideosService;
@@ -60,7 +61,12 @@ final class ProcessVideo implements ShouldQueue
         )->id;
         $this->addFileToVectorStore($client, $vectorStoreId, $file);
 
-        $youtubeVideosService->saveYoutubeVideo($vectorStoreId, $file->id, $metadata);
+        $youtubeVideosService->saveYoutubeVideo(YoutubeVideoDTO::from([
+            'chat_id' => $this->chatId,
+            'file_id' => $file->id,
+            'vector_store_id' => $vectorStoreId,
+            'metadata' => $metadata,
+        ]));
 
         event(new VideoProcessed($this->chatId));
     }

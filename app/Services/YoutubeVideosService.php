@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\DTOs\YoutubeVideo\YoutubeVideoDTO;
 use App\Models\YoutubeVideo;
 use App\Models\YoutubeVideoAuthor;
 use App\Models\YoutubeVideoMedia;
 use App\Models\YoutubeVideoStat;
 use App\Supadata\Entities\Author;
 use App\Supadata\Entities\Media;
-use App\Supadata\Entities\Metadata;
 use App\Supadata\Entities\Stats;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\Optional;
@@ -21,24 +21,25 @@ final class YoutubeVideosService
     /**
      * @throws Throwable
      */
-    public function saveYoutubeVideo(string $vectorStoreId, string $fileId, Metadata $metadata): void
+    public function saveYoutubeVideo(YoutubeVideoDTO $dto): void
     {
-        DB::transaction(function () use ($vectorStoreId, $fileId, $metadata): void {
+        DB::transaction(function () use ($dto): void {
             $youtubeVideo = new YoutubeVideo();
-            $youtubeVideo->vector_store_id = $vectorStoreId;
-            $youtubeVideo->file_id = $fileId;
-            $youtubeVideo->video_id = $metadata->id;
-            $youtubeVideo->url = $metadata->url;
-            $youtubeVideo->title = $metadata->title;
-            $youtubeVideo->description = $metadata->description;
-            $youtubeVideo->tags = $metadata->tags;
-            $youtubeVideo->additional_data = $metadata->additionalData;
-            $youtubeVideo->uploaded_at = $metadata->createdAt;
+            $youtubeVideo->chat_id = $dto->chat_id;
+            $youtubeVideo->vector_store_id = $dto->vector_store_id;
+            $youtubeVideo->file_id = $dto->file_id;
+            $youtubeVideo->video_id = $dto->metadata->id;
+            $youtubeVideo->url = $dto->metadata->url;
+            $youtubeVideo->title = $dto->metadata->title;
+            $youtubeVideo->description = $dto->metadata->description;
+            $youtubeVideo->tags = $dto->metadata->tags;
+            $youtubeVideo->additional_data = $dto->metadata->additionalData;
+            $youtubeVideo->uploaded_at = $dto->metadata->createdAt;
             $youtubeVideo->save();
 
-            $this->saveVideoStats($youtubeVideo, $metadata->stats);
-            $this->saveVideoAuthor($youtubeVideo, $metadata->author);
-            $this->saveVideoMedia($youtubeVideo, $metadata->media);
+            $this->saveVideoStats($youtubeVideo, $dto->metadata->stats);
+            $this->saveVideoAuthor($youtubeVideo, $dto->metadata->author);
+            $this->saveVideoMedia($youtubeVideo, $dto->metadata->media);
         });
     }
 
@@ -83,6 +84,7 @@ final class YoutubeVideosService
             $model->duration = $media->duration instanceof Optional ? null : $media->duration;
             $model->thumbnail_url = $media->thumbnailUrl instanceof Optional ? null : $media->thumbnailUrl;
             $model->url = $media->url instanceof Optional ? null : $media->url;
+            /** @phpstan-ignore-next-line */
             $model->items = $media->items instanceof Optional ? null : $media->items;
             $youtubeVideo->media()->save($model);
         });

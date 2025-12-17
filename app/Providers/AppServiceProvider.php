@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Handlers\ClearCommandHandler;
 use App\Handlers\StartCommandHandler;
+use App\Handlers\TextHandler;
 use App\Handlers\YoutubeUrlHandler;
 use App\Services\ChatStatesService;
 use App\Services\UsersService;
@@ -122,6 +123,10 @@ final class AppServiceProvider extends ServiceProvider
                 api: $this->app->make(TelegramBotApi::class),
                 chatStatesService: $this->app->make(ChatStatesService::class),
             );
+        });
+
+        $this->app->singleton(TextHandler::class, function () {
+            return new TextHandler();
         });
     }
 }

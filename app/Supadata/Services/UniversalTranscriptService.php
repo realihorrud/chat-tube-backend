@@ -26,7 +26,7 @@ final readonly class UniversalTranscriptService
      * @throws ConnectionException
      * @throws RequestException
      */
-    public function getTranscript(YoutubeUrl $url, ?string $lang = null, ?string $mode = null, bool $text = false): Transcript
+    public function getTranscript(YoutubeUrl $url, ?string $lang = null, ?string $mode = 'native', bool $text = false): Transcript
     {
         $response = Http::baseUrl($this->baseUrl)->withHeaders([
             'x-api-key' => $this->apiKey,

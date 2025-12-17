@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Handlers\CallbackHandler;
 use App\Handlers\ClearCommandHandler;
 use App\Handlers\StartCommandHandler;
+use App\Handlers\TextHandler;
 use App\Handlers\YoutubeUrlHandler;
 use App\Models\ChatState;
 use App\Telegram\Entities\Update;
@@ -28,7 +29,8 @@ final readonly class TelegramController
             $handler
                 ->setNextHandler(app(StartCommandHandler::class))
                 ->setNextHandler(app(ClearCommandHandler::class))
-                ->setNextHandler(app(CallbackHandler::class));
+                ->setNextHandler(app(CallbackHandler::class))
+                ->setNextHandler(app(TextHandler::class));
 
             $update = Update::from($request->all());
 
