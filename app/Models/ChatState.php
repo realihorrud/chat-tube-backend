@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property int $chat_id
- * @property-read User|null $user
+ * @property-read TelegramUser|null $user
  *
  * @method static Builder<static>|ChatState byChatId(int $chatId)
  * @method static Builder<static>|ChatState newModelQuery()

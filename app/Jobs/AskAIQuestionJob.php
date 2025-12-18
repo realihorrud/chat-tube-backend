@@ -6,7 +6,9 @@ namespace App\Jobs;
 
 use App\Events\AIAnsweredQuestion;
 use App\Models\YoutubeVideo;
+use App\Services\ResponseService;
 use App\Telegram\TelegramBotApi;
+use App\ValueObjects\YoutubeUrl;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use OpenAI\Laravel\Facades\OpenAI;
@@ -25,13 +27,15 @@ final class AskAIQuestionJob implements ShouldQueue
         public readonly string $text,
     ) {}
 
-    public function handle(TelegramBotApi $api): void
+    public function handle(TelegramBotApi $api, ResponseService $responseService): void
     {
         $api->sendMessage([
             'chat_id' => $this->chatId,
             'text' => '_Loading answer..._',
             'parse_mode' => 'Markdown',
         ]);
+
+        $video = YoutubeVideo::latestUploadedVideo($this->chatId)->first();
 
         $response = OpenAI::responses()->create([
             'model' => 'gpt-5',
@@ -41,7 +45,7 @@ final class AskAIQuestionJob implements ShouldQueue
                 [
                     'type' => 'file_search',
                     'vector_store_ids' => [
-                        YoutubeVideo::latestUploadedVideo($this->chatId)->first()->vector_store_id,
+                        $video->vector_store_id,
                     ],
                 ],
             ],
@@ -51,8 +55,11 @@ final class AskAIQuestionJob implements ShouldQueue
 
         $api->sendMessage([
             'chat_id' => $this->chatId,
-            'text' => (string) $response->outputText,
+            'text' => $responseService->linkTimestamps($response->outputText, YoutubeUrl::fromString($video->url)),
             'parse_mode' => 'Markdown',
+            'link_preview_options' => [
+                'is_disabled' => true,
+            ],
         ]);
 
         event(new AIAnsweredQuestion($this->chatId));
