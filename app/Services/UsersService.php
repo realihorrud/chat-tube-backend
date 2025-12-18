@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\User;
-use App\Telegram\Entities\User as TelegramUser;
+use App\Models\TelegramUser;
+use App\Telegram\Entities\User as TelegramUserEntity;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -14,10 +14,10 @@ final class UsersService
     /**
      * @throws Throwable
      */
-    public function createOrUpdate(TelegramUser $telegramUser): User
+    public function createOrUpdate(TelegramUserEntity $telegramUser): TelegramUser
     {
         return DB::transaction(function () use ($telegramUser) {
-            return User::query()->updateOrCreate(['telegram_id' => $telegramUser->id], [
+            return TelegramUser::query()->updateOrCreate(['telegram_id' => $telegramUser->id], [
                 'first_name' => $telegramUser->first_name,
                 'last_name' => $telegramUser->last_name,
                 'username' => $telegramUser->username,

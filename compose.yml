@@ -43,4 +43,22 @@ services:
       options:
         max-size: "100M"
         max-file: "5"
-
+  redis:
+    container_name: ai_summarizer_bot_redis
+    build: .docker/redis
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - .docker/redis/data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+        max-file: "5"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3

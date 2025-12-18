@@ -28,8 +28,7 @@ final class ProcessVideo implements ShouldQueue
     public function __construct(
         public readonly int $chatId,
         public readonly YoutubeUrl $videoUrl,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Illuminate\Http\Client\ConnectionException

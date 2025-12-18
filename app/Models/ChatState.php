@@ -44,7 +44,7 @@ final class ChatState extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'telegram_id', 'chat_id');
+        return $this->belongsTo(TelegramUser::class, 'telegram_id', 'chat_id');
     }
 
     /**

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
+use App\Models\TelegramUser;
 use App\Telegram\Entities\CallbackQuery;
 use App\Telegram\Entities\Message;
 use App\Telegram\Entities\Update;
-use App\Telegram\Entities\User as TelegramUser;
+use App\Telegram\Entities\User as TelegramUserEntity;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -29,12 +29,12 @@ final class SetLocaleMiddleware
         }
 
         if ($update->message instanceof Message) {
-            $user = User::query()
+            $user = TelegramUser::query()
                 ->where('telegram_id', $update->message->chat->id)
                 ->first();
 
             $language = 'en';
-            if ($update->message->from instanceof TelegramUser) {
+            if ($update->message->from instanceof TelegramUserEntity) {
                 $language = $update->message->from->language_code;
             }
 

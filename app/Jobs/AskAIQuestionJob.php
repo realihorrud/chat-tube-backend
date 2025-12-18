@@ -16,9 +16,9 @@ final class AskAIQuestionJob implements ShouldQueue
 {
     use Queueable;
 
-    public int $timeout = 180;
-
     private const string INSTRUCTIONS = 'Answer questions in user\'s language based on the video transcript from vector file store. First answer, then add evidence from transcript with timestamps if applicable, if not just answer. Prefer markdown style, but without headings, because it\'s intended for Telegram. Answer only on questions related to video\'s transcript';
+
+    public int $timeout = 180;
 
     public function __construct(
         public readonly int $chatId,
@@ -51,7 +51,7 @@ final class AskAIQuestionJob implements ShouldQueue
 
         $api->sendMessage([
             'chat_id' => $this->chatId,
-            'text' => (string)$response->outputText,
+            'text' => (string) $response->outputText,
             'parse_mode' => 'Markdown',
         ]);
 
