@@ -14,7 +14,7 @@ use App\ValueObjects\YoutubeUrl;
 use Illuminate\Container\Attributes\Config;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use OpenAI\Client;
+use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\Files\CreateResponse;
 use OpenAI\Responses\VectorStores\Files\VectorStoreFileResponse;
 use Throwable;
@@ -23,10 +23,13 @@ final class ProcessVideo implements ShouldQueue
 {
     use Queueable;
 
+    public int $timeout = 60;
+
     public function __construct(
         public readonly int $chatId,
         public readonly YoutubeUrl $videoUrl,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws \Illuminate\Http\Client\ConnectionException
@@ -38,7 +41,6 @@ final class ProcessVideo implements ShouldQueue
         SupadataSDK $sdk,
         YoutubeVideosService $youtubeVideosService,
         CreateTranscriptFileService $createTranscriptFileService,
-        Client $client,
         #[Config('services.open_ai.vector_stores.expires_in_days')]
         int $expiresInDays,
     ): void {
@@ -48,9 +50,12 @@ final class ProcessVideo implements ShouldQueue
         $metadata = $sdk->universalMetadata()->getMetadata($this->videoUrl->toUrl());
 
         $filename = $createTranscriptFileService->handle($metadata, $transcript);
-        $file = $this->uploadFile($client, $filename);
+        $file = OpenAI::files()->upload([
+            'file' => fopen($filename, 'r'),
+            'purpose' => 'assistants',
+        ]);
 
-        $vectorStoreId = $client->vectorStores()->create(
+        $vectorStoreId = OpenAI::vectorStores()->create(
             parameters: [
                 'name' => $metadata->id,
                 'expires_after' => [
@@ -59,7 +64,7 @@ final class ProcessVideo implements ShouldQueue
                 ],
             ],
         )->id;
-        $this->addFileToVectorStore($client, $vectorStoreId, $file);
+        $this->addFileToVectorStore($vectorStoreId, $file);
 
         $youtubeVideosService->saveYoutubeVideo(YoutubeVideoDTO::from([
             'chat_id' => $this->chatId,
@@ -80,21 +85,10 @@ final class ProcessVideo implements ShouldQueue
         ]);
     }
 
-    private function uploadFile(
-        Client $client,
-        string $filename,
-    ): CreateResponse {
-        return $client->files()->upload([
-            'file' => fopen($filename, 'r'),
-            'purpose' => 'assistants',
-        ]);
-    }
-
     private function addFileToVectorStore(
-        Client $client,
         string $vectorStoreId,
         CreateResponse $file
     ): VectorStoreFileResponse {
-        return $client->vectorStores()->files()->create($vectorStoreId, ['file_id' => $file->id]);
+        return OpenAI::vectorStores()->files()->create($vectorStoreId, ['file_id' => $file->id]);
     }
 }

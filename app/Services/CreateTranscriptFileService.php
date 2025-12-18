@@ -7,13 +7,14 @@ namespace App\Services;
 use App\Supadata\Entities\Content;
 use App\Supadata\Entities\Metadata;
 use App\Supadata\Entities\Transcript;
+use Illuminate\Support\Str;
 use LogicException;
 
 final class CreateTranscriptFileService
 {
     public function handle(Metadata $metadata, Transcript $transcript): string
     {
-        $filename = storage_path('app/private/'.$metadata->title.'.txt');
+        $filename = storage_path('app/private/'.Str::slug($metadata->title).'.txt');
 
         $file = fopen($filename, 'w');
         fwrite($file, $this->getFileContent($metadata, $transcript));
