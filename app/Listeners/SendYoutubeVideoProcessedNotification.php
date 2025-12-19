@@ -28,7 +28,7 @@ final readonly class SendYoutubeVideoProcessedNotification
         ]));
 
         if ($event->question !== '') {
-            dispatch(new AskQuestionAboutYoutubeVideo($event->chatId, $event->question, askedImmediately: true));
+            AskQuestionAboutYoutubeVideo::dispatch($event->chatId, $event->question, askedImmediately: true);
         } else {
             $this->api->editMessageText([
                 'message_id' => (int) $chatState->last_message_id,

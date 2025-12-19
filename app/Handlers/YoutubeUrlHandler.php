@@ -46,13 +46,7 @@ final class YoutubeUrlHandler extends Handler
                 'last_update' => $update,
             ]));
 
-            dispatch(
-                new ProcessYoutubeVideo(
-                    chatId: $chatId,
-                    videoUrl: $youtubeUrl,
-                    question: mb_trim($question),
-                )
-            );
+            ProcessYoutubeVideo::dispatch($chatId, $youtubeUrl, mb_trim($question));
 
             return;
         }

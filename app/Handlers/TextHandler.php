@@ -20,7 +20,7 @@ final class TextHandler extends Handler
                 case State::ProcessingVideo:
                     break; // Do nothing for now
                 case State::QuestionAsking:
-                    dispatch(new AskQuestionAboutYoutubeVideo($update->message->chat->id, $update->message->text));
+                    AskQuestionAboutYoutubeVideo::dispatch($update->message->chat->id, $update->message->text);
                     break;
             }
 
