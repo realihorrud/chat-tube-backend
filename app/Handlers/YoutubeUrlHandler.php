@@ -6,13 +6,11 @@ namespace App\Handlers;
 
 use App\DTOs\ChatState\UpdateOrCreateChatStateDTO;
 use App\Enums\State;
-use App\Jobs\ProcessVideo;
+use App\Jobs\ProcessYoutubeVideo;
 use App\Models\ChatState;
 use App\Services\ChatStatesService;
 use App\Telegram\Entities\Update;
-use App\Telegram\TelegramBotApi;
 use App\ValueObjects\YoutubeUrl;
-use InvalidArgumentException;
 use Spatie\LaravelData\Optional;
 use Throwable;
 use Webmozart\Assert\Assert;
@@ -20,7 +18,6 @@ use Webmozart\Assert\Assert;
 final class YoutubeUrlHandler extends Handler
 {
     public function __construct(
-        private readonly TelegramBotApi $api,
         private readonly ChatStatesService $chatStatesService
     ) {}
 
@@ -43,26 +40,19 @@ final class YoutubeUrlHandler extends Handler
                 return;
             }
 
-            try {
-                $this->chatStatesService->updateOrCreateState(UpdateOrCreateChatStateDTO::from([
-                    'chat_id' => $chatId,
-                    'state' => State::ProcessingVideo,
-                    'last_update' => $update,
-                ]));
+            $this->chatStatesService->updateOrCreateState(UpdateOrCreateChatStateDTO::from([
+                'chat_id' => $chatId,
+                'state' => State::ProcessingVideo,
+                'last_update' => $update,
+            ]));
 
-                dispatch(
-                    new ProcessVideo(
-                        chatId: $chatId,
-                        videoUrl: $youtubeUrl,
-                        question: mb_trim($question),
-                    )
-                );
-            } catch (InvalidArgumentException $exception) {
-                $this->api->sendMessage([
-                    'chat_id' => $chatId,
-                    'text' => $exception->getMessage(),
-                ]);
-            }
+            dispatch(
+                new ProcessYoutubeVideo(
+                    chatId: $chatId,
+                    videoUrl: $youtubeUrl,
+                    question: mb_trim($question),
+                )
+            );
 
             return;
         }

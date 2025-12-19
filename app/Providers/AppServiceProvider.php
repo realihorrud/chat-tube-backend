@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Handlers\ClearCommandHandler;
 use App\Handlers\StartCommandHandler;
 use App\Handlers\TextHandler;
 use App\Handlers\YoutubeUrlHandler;
@@ -107,20 +106,13 @@ final class AppServiceProvider extends ServiceProvider
     private function registerHandlers(): void
     {
         $this->app->singleton(YoutubeUrlHandler::class, function () {
-            return new YoutubeUrlHandler($this->app->make(TelegramBotApi::class), $this->app->make(ChatStatesService::class));
+            return new YoutubeUrlHandler($this->app->make(ChatStatesService::class));
         });
 
         $this->app->singleton(StartCommandHandler::class, function () {
             return new StartCommandHandler(
                 api: $this->app->make(TelegramBotApi::class),
                 usersService: $this->app->make(UsersService::class),
-                chatStatesService: $this->app->make(ChatStatesService::class),
-            );
-        });
-
-        $this->app->singleton(ClearCommandHandler::class, function () {
-            return new ClearCommandHandler(
-                api: $this->app->make(TelegramBotApi::class),
                 chatStatesService: $this->app->make(ChatStatesService::class),
             );
         });

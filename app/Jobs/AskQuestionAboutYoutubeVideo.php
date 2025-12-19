@@ -14,7 +14,7 @@ use Illuminate\Foundation\Queue\Queueable;
 use OpenAI\Laravel\Facades\OpenAI;
 use Webmozart\Assert\Assert;
 
-final class AskAIQuestionJob implements ShouldQueue
+final class AskQuestionAboutYoutubeVideo implements ShouldQueue
 {
     use Queueable;
 
@@ -56,6 +56,11 @@ final class AskAIQuestionJob implements ShouldQueue
         $api->sendMessage([
             'chat_id' => $this->chatId,
             'text' => $responseService->linkTimestamps($response->outputText, YoutubeUrl::fromString($video->url)),
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => 'Without timestamps', 'callback_data' => 'without_timestamps']],
+                ],
+            ],
             'parse_mode' => 'Markdown',
             'link_preview_options' => [
                 'is_disabled' => true,

@@ -18,7 +18,7 @@ final readonly class SendAIAnsweredQuestionNotification
     {
         $this->api->sendMessage([
             'chat_id' => $event->chatId,
-            'text' => 'Keep asking questions or if you want to upload another video enter /clear, then send the link of youtube video again.',
+            'text' => 'Keep asking questions or upload another video',
         ]);
     }
 }

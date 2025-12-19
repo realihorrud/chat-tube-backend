@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handlers;
 
 use App\Enums\State;
-use App\Jobs\AskAIQuestionJob;
+use App\Jobs\AskQuestionAboutYoutubeVideo;
 use App\Models\ChatState;
 use App\Telegram\Entities\Message;
 use App\Telegram\Entities\Update;
@@ -20,7 +20,7 @@ final class TextHandler extends Handler
                 case State::ProcessingVideo:
                     break; // Do nothing for now
                 case State::QuestionAsking:
-                    dispatch(new AskAIQuestionJob($update->message->chat->id, $update->message->text));
+                    dispatch(new AskQuestionAboutYoutubeVideo($update->message->chat->id, $update->message->text));
                     break;
             }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Handlers\CallbackHandler;
-use App\Handlers\ClearCommandHandler;
 use App\Handlers\StartCommandHandler;
 use App\Handlers\TextHandler;
 use App\Handlers\YoutubeUrlHandler;
@@ -28,7 +27,6 @@ final readonly class TelegramController
 
             $handler
                 ->setNextHandler(app(StartCommandHandler::class))
-                ->setNextHandler(app(ClearCommandHandler::class))
                 ->setNextHandler(app(CallbackHandler::class))
                 ->setNextHandler(app(TextHandler::class));
 

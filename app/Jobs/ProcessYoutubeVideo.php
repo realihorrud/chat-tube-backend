@@ -21,7 +21,7 @@ use OpenAI\Responses\Files\CreateResponse;
 use OpenAI\Responses\VectorStores\Files\VectorStoreFileResponse;
 use Throwable;
 
-final class ProcessVideo implements ShouldQueue
+final class ProcessYoutubeVideo implements ShouldQueue
 {
     use Queueable;
 

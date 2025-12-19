@@ -7,12 +7,12 @@ namespace App\Listeners;
 use App\DTOs\ChatState\UpdateOrCreateChatStateDTO;
 use App\Enums\State;
 use App\Events\VideoProcessed;
-use App\Jobs\AskAIQuestionJob;
+use App\Jobs\AskQuestionAboutYoutubeVideo;
 use App\Services\ChatStatesService;
 use App\Telegram\TelegramBotApi;
 use Throwable;
 
-final readonly class SendVideoProcessedNotification
+final readonly class SendYoutubeVideoProcessedNotification
 {
     public function __construct(private TelegramBotApi $api, private ChatStatesService $chatStatesService) {}
 
@@ -27,11 +27,11 @@ final readonly class SendVideoProcessedNotification
         ]));
 
         if ($event->question !== '') {
-            dispatch(new AskAIQuestionJob($event->chatId, $event->question));
+            dispatch(new AskQuestionAboutYoutubeVideo($event->chatId, $event->question));
         } else {
             $this->api->sendMessage([
                 'chat_id' => $event->chatId,
-                'text' => 'Ask anything about this video until /clear command is entered.',
+                'text' => 'Ask anything about this video!',
                 'parse_mode' => 'Markdown',
             ]);
         }
