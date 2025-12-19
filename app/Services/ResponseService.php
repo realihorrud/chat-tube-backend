@@ -29,7 +29,7 @@ final class ResponseService
 
     private function createTimestampLink(string $timestamp, YoutubeUrl $youtubeUrl): string
     {
-        $url = (string)Uri::of($youtubeUrl->toUrl()->value())
+        $url = (string) Uri::of($youtubeUrl->toUrl()->value())
             ->withQuery(['t' => $this->timeToSeconds($timestamp)]);
 
         return sprintf('[%s](%s)', $timestamp, $url);
@@ -39,6 +39,6 @@ final class ResponseService
     {
         [$hours, $minutes, $seconds] = explode(':', $time);
 
-        return (int)$hours * 3600 + (int)$minutes * 60 + (int)$seconds;
+        return (int) $hours * 3600 + (int) $minutes * 60 + (int) $seconds;
     }
 }

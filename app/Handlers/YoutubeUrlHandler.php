@@ -29,31 +29,37 @@ final class YoutubeUrlHandler extends Handler
      */
     public function handle(Update $update, ?ChatState $state): void
     {
-        if (! $update->message instanceof Optional && YoutubeUrl::isValid($update->message->text)) {
-            Assert::string($update->message->text);
+        if (! $update->message instanceof Optional) {
+            $chatId = $update->message->chat->id;
+            $text = $update->message->text;
+
+            Assert::string($text);
+
+            [$question, $youtubeUrl] = $this->parseText($text);
+
+            if (is_null($youtubeUrl)) {
+                parent::handle($update, $state);
+
+                return;
+            }
 
             try {
                 $this->chatStatesService->updateOrCreateState(UpdateOrCreateChatStateDTO::from([
-                    'chat_id' => $update->message->chat->id,
+                    'chat_id' => $chatId,
                     'state' => State::ProcessingVideo,
                     'last_update' => $update,
                 ]));
 
-                $this->api->sendMessage([
-                    'chat_id' => $update->message->chat->id,
-                    'text' => __('messages.video_processing'),
-                    'parse_mode' => 'Markdown',
-                ]);
-
                 dispatch(
                     new ProcessVideo(
-                        chatId: $update->message->chat->id,
-                        videoUrl: YoutubeUrl::fromString($update->message->text),
+                        chatId: $chatId,
+                        videoUrl: $youtubeUrl,
+                        question: mb_trim($question),
                     )
                 );
             } catch (InvalidArgumentException $exception) {
                 $this->api->sendMessage([
-                    'chat_id' => $update->message->chat->id,
+                    'chat_id' => $chatId,
                     'text' => $exception->getMessage(),
                 ]);
             }
@@ -62,5 +68,23 @@ final class YoutubeUrlHandler extends Handler
         }
 
         parent::handle($update, $state);
+    }
+
+    /**
+     * Parses text and returns either questions and YT URL or just YT URL
+     *
+     * @return array<string|YoutubeUrl|null>
+     */
+    private function parseText(string $text): array
+    {
+        $youtubeUrl = null;
+        foreach (explode(' ', $text) as $item) {
+            if (YoutubeUrl::isValid($item)) {
+                $youtubeUrl = YoutubeUrl::fromString($item);
+                $text = str_replace($item, '', $text);
+            }
+        }
+
+        return [$text, $youtubeUrl];
     }
 }

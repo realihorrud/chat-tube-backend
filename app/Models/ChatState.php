@@ -40,7 +40,7 @@ final class ChatState extends Model
     ];
 
     /**
-     * @return BelongsTo<User, $this>
+     * @return BelongsTo<TelegramUser, $this>
      */
     public function user(): BelongsTo
     {

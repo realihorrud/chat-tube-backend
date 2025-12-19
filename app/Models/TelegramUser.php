@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -18,17 +20,18 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $language_code
  * @property-read ChatState|null $chatState
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser whereFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser whereLanguageCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser whereLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser whereTelegramId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TelegramUser whereUsername($value)
+ * @method static Builder<static>|TelegramUser byChatId(int $chatId)
+ * @method static Builder<static>|TelegramUser newModelQuery()
+ * @method static Builder<static>|TelegramUser newQuery()
+ * @method static Builder<static>|TelegramUser query()
+ * @method static Builder<static>|TelegramUser whereCreatedAt($value)
+ * @method static Builder<static>|TelegramUser whereFirstName($value)
+ * @method static Builder<static>|TelegramUser whereId($value)
+ * @method static Builder<static>|TelegramUser whereLanguageCode($value)
+ * @method static Builder<static>|TelegramUser whereLastName($value)
+ * @method static Builder<static>|TelegramUser whereTelegramId($value)
+ * @method static Builder<static>|TelegramUser whereUpdatedAt($value)
+ * @method static Builder<static>|TelegramUser whereUsername($value)
  *
  * @mixin \Eloquent
  */
@@ -42,5 +45,14 @@ final class TelegramUser extends Model
     public function chatState(): HasOne
     {
         return $this->hasOne(ChatState::class, 'chat_id', 'telegram_id');
+    }
+
+    /**
+     * @param  Builder<TelegramUser>  $query
+     */
+    #[Scope]
+    protected function byChatId(Builder $query, int $chatId): void
+    {
+        $query->where('telegram_id', $chatId);
     }
 }

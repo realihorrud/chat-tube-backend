@@ -6,8 +6,10 @@ namespace App\Jobs;
 
 use App\DTOs\YoutubeVideo\YoutubeVideoDTO;
 use App\Events\VideoProcessed;
+use App\Models\TelegramUser;
 use App\Services\CreateTranscriptFileService;
 use App\Services\YoutubeVideosService;
+use App\Supadata\Entities\Error;
 use App\Supadata\SupadataSDK;
 use App\Telegram\TelegramBotApi;
 use App\ValueObjects\YoutubeUrl;
@@ -28,6 +30,7 @@ final class ProcessVideo implements ShouldQueue
     public function __construct(
         public readonly int $chatId,
         public readonly YoutubeUrl $videoUrl,
+        public readonly string $question,
     ) {}
 
     /**
@@ -46,6 +49,15 @@ final class ProcessVideo implements ShouldQueue
         $this->sendWaitingMessage($api);
 
         $transcript = $sdk->universalTranscript()->getTranscript($this->videoUrl);
+        if ($transcript instanceof Error) {
+            $api->sendMessage([
+                'chat_id' => $this->chatId,
+                'text' => $transcript->getMessage(TelegramUser::byChatId($this->chatId)->first()->language_code),
+                'parse_mode' => 'Markdown',
+            ]);
+
+            return;
+        }
         $metadata = $sdk->universalMetadata()->getMetadata($this->videoUrl->toUrl());
 
         $filename = $createTranscriptFileService->handle($metadata, $transcript);
@@ -72,7 +84,7 @@ final class ProcessVideo implements ShouldQueue
             'metadata' => $metadata,
         ]));
 
-        event(new VideoProcessed($this->chatId));
+        event(new VideoProcessed($this->chatId, $this->question));
     }
 
     private function sendWaitingMessage(TelegramBotApi $api): void

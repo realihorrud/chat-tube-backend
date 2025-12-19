@@ -7,6 +7,7 @@ namespace App\Listeners;
 use App\DTOs\ChatState\UpdateOrCreateChatStateDTO;
 use App\Enums\State;
 use App\Events\VideoProcessed;
+use App\Jobs\AskAIQuestionJob;
 use App\Services\ChatStatesService;
 use App\Telegram\TelegramBotApi;
 use Throwable;
@@ -25,10 +26,14 @@ final readonly class SendVideoProcessedNotification
             'state' => State::QuestionAsking,
         ]));
 
-        $this->api->sendMessage([
-            'chat_id' => $event->chatId,
-            'text' => 'Ask anything about this video until /clear command is entered.',
-            'parse_mode' => 'Markdown',
-        ]);
+        if ($event->question !== '') {
+            dispatch(new AskAIQuestionJob($event->chatId, $event->question));
+        } else {
+            $this->api->sendMessage([
+                'chat_id' => $event->chatId,
+                'text' => 'Ask anything about this video until /clear command is entered.',
+                'parse_mode' => 'Markdown',
+            ]);
+        }
     }
 }
