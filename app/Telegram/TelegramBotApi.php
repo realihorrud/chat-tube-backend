@@ -36,6 +36,23 @@ interface TelegramBotApi
     public function sendMessage(array $params): Message;
 
     /**
+     * @see https://core.telegram.org/bots/api#editmessagetext
+     *
+     * @param array{
+     *     business_connection_id?: string,
+     *     chat_id?: int|string,
+     *     message_id?: int,
+     *     inline_message_id?: string,
+     *     text: string,
+     *     parse_mode?: string,
+     *     entities?:array,
+     *     link_preview_options?:array,
+     *     reply_markup?:array
+     * } $params
+     */
+    public function editMessageText(array $params): Message|bool;
+
+    /**
      * @see https://core.telegram.org/bots/api#deletemessage
      */
     public function deleteMessage(int $chatId, int $messageId): bool;

@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property int $chat_id
+ * @property int|null $last_message_id
+ * @property string|null $last_message
  * @property-read TelegramUser|null $user
  *
  * @method static Builder<static>|ChatState byChatId(int $chatId)
@@ -26,6 +28,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder<static>|ChatState whereChatId($value)
  * @method static Builder<static>|ChatState whereCreatedAt($value)
  * @method static Builder<static>|ChatState whereId($value)
+ * @method static Builder<static>|ChatState whereLastMessage($value)
+ * @method static Builder<static>|ChatState whereLastMessageId($value)
  * @method static Builder<static>|ChatState whereLastUpdate($value)
  * @method static Builder<static>|ChatState whereState($value)
  * @method static Builder<static>|ChatState whereUpdatedAt($value)

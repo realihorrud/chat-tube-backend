@@ -8,6 +8,7 @@ use App\Handlers\StartCommandHandler;
 use App\Handlers\TextHandler;
 use App\Handlers\YoutubeUrlHandler;
 use App\Services\ChatStatesService;
+use App\Services\LoadersService;
 use App\Services\UsersService;
 use App\Telegram\ActualTelegramBotApi;
 use App\Telegram\TelegramBotApi;
@@ -119,6 +120,13 @@ final class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(TextHandler::class, function () {
             return new TextHandler();
+        });
+
+        $this->app->singleton(LoadersService::class, function () {
+            return new LoadersService(
+                $this->app->make(TelegramBotApi::class),
+                $this->app->make(ChatStatesService::class)
+            );
         });
     }
 }

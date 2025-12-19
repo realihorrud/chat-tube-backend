@@ -9,13 +9,13 @@ use App\Telegram\Entities\Update;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
-final class UpdateOrCreateChatStateDTO extends Data
+final class UpdateChatStateDTO extends Data
 {
     public function __construct(
-        public int $chat_id,
-        public State $state,
+        public Optional|int $chat_id,
+        public Optional|State $state,
         public Optional|Update $last_update,
         public Optional|int $last_message_id,
-        public Optional|int $last_message,
+        public Optional|string $last_message,
     ) {}
 }

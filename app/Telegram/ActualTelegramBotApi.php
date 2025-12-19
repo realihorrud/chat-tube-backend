@@ -131,4 +131,23 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
 
         return true;
     }
+
+    /**
+     * @see https://core.telegram.org/bots/api#editmessagetext
+     *
+     * @throws ConnectionException
+     */
+    public function editMessageText(array $params): Message|bool
+    {
+        $response = Http::baseUrl($this->baseUrl)
+            ->throw()
+            ->post('editMessageText', $params)
+            ->json();
+
+        if (is_bool($response['result'])) {
+            return $response['result'];
+        }
+
+        return Message::from($response['result']);
+    }
 }

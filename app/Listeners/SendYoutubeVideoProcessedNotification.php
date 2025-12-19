@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
-use App\DTOs\ChatState\UpdateOrCreateChatStateDTO;
+use App\DTOs\ChatState\UpdateChatStateDTO;
 use App\Enums\State;
 use App\Events\VideoProcessed;
 use App\Jobs\AskQuestionAboutYoutubeVideo;
+use App\Models\ChatState;
 use App\Services\ChatStatesService;
 use App\Telegram\TelegramBotApi;
 use Throwable;
@@ -21,17 +22,18 @@ final readonly class SendYoutubeVideoProcessedNotification
      */
     public function handle(VideoProcessed $event): void
     {
-        $this->chatStatesService->updateOrCreateState(UpdateOrCreateChatStateDTO::from([
-            'chat_id' => $event->chatId,
+        $chatState = ChatState::byChatId($event->chatId)->first();
+        $this->chatStatesService->update($chatState, UpdateChatStateDTO::from([
             'state' => State::QuestionAsking,
         ]));
 
         if ($event->question !== '') {
-            dispatch(new AskQuestionAboutYoutubeVideo($event->chatId, $event->question));
+            dispatch(new AskQuestionAboutYoutubeVideo($event->chatId, $event->question, askedImmediately: true));
         } else {
-            $this->api->sendMessage([
+            $this->api->editMessageText([
+                'message_id' => (int) $chatState->last_message_id,
                 'chat_id' => $event->chatId,
-                'text' => 'Ask anything about this video!',
+                'text' => 'Ask anything about this video',
                 'parse_mode' => 'Markdown',
             ]);
         }

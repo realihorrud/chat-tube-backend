@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\Events\AIAnsweredQuestion;
+use App\Models\ChatState;
 use App\Models\YoutubeVideo;
+use App\Services\LoadersService;
 use App\Services\ResponseService;
 use App\Telegram\TelegramBotApi;
 use App\ValueObjects\YoutubeUrl;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use OpenAI\Laravel\Facades\OpenAI;
+use Throwable;
 use Webmozart\Assert\Assert;
 
 final class AskQuestionAboutYoutubeVideo implements ShouldQueue
@@ -25,17 +28,21 @@ final class AskQuestionAboutYoutubeVideo implements ShouldQueue
     public function __construct(
         public readonly int $chatId,
         public readonly string $text,
+        public readonly bool $askedImmediately = false,
     ) {}
 
-    public function handle(TelegramBotApi $api, ResponseService $responseService): void
+    /**
+     * @throws Throwable
+     */
+    public function handle(TelegramBotApi $api, ResponseService $responseService, LoadersService $loaderService): void
     {
-        $api->sendMessage([
-            'chat_id' => $this->chatId,
-            'text' => '_Loading answer..._',
-            'parse_mode' => 'Markdown',
-        ]);
+        $chatState = ChatState::byChatId($this->chatId)->first();
+
+        $loaderService->startProgress('Answering your question', $this->chatId, ! $this->askedImmediately);
 
         $video = YoutubeVideo::latestUploadedVideo($this->chatId)->first();
+
+        $loaderService->incrementLoadingBy($this->chatId, 6, 5);
 
         $response = OpenAI::responses()->create([
             'model' => 'gpt-5',
@@ -51,19 +58,26 @@ final class AskQuestionAboutYoutubeVideo implements ShouldQueue
             ],
         ]);
 
+        $loaderService->incrementLoadingBy($this->chatId, times: 3);
+
         Assert::string($response->outputText);
 
-        $api->sendMessage([
+        $loaderService->incrementLoadingBy($this->chatId, 3, times: 11);
+
+        $chatState->refresh();
+
+        $api->editMessageText([
+            'message_id' => (int) $chatState->last_message_id,
             'chat_id' => $this->chatId,
             'text' => $responseService->linkTimestamps($response->outputText, YoutubeUrl::fromString($video->url)),
+            'parse_mode' => 'Markdown',
+            'link_preview_options' => [
+                'is_disabled' => true,
+            ],
             'reply_markup' => [
                 'inline_keyboard' => [
                     [['text' => 'Without timestamps', 'callback_data' => 'without_timestamps']],
                 ],
-            ],
-            'parse_mode' => 'Markdown',
-            'link_preview_options' => [
-                'is_disabled' => true,
             ],
         ]);
 
