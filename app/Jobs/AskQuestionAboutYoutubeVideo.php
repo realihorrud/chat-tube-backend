@@ -81,6 +81,6 @@ final class AskQuestionAboutYoutubeVideo implements ShouldQueue
             ],
         ]);
 
-        event(new AIAnsweredQuestion($this->chatId));
+        AIAnsweredQuestion::dispatch($this->chatId);
     }
 }

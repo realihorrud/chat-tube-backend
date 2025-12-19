@@ -6,7 +6,7 @@ namespace App\Listeners;
 
 use App\DTOs\ChatState\UpdateChatStateDTO;
 use App\Enums\State;
-use App\Events\VideoProcessed;
+use App\Events\YoutubeVideoProcessed;
 use App\Jobs\AskQuestionAboutYoutubeVideo;
 use App\Models\ChatState;
 use App\Services\ChatStatesService;
@@ -20,7 +20,7 @@ final readonly class SendYoutubeVideoProcessedNotification
     /**
      * @throws Throwable
      */
-    public function handle(VideoProcessed $event): void
+    public function handle(YoutubeVideoProcessed $event): void
     {
         $chatState = ChatState::byChatId($event->chatId)->first();
         $this->chatStatesService->update($chatState, UpdateChatStateDTO::from([

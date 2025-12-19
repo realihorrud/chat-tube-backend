@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\DTOs\YoutubeVideo\YoutubeVideoDTO;
-use App\Events\VideoProcessed;
+use App\Events\YoutubeVideoProcessed;
 use App\Models\TelegramUser;
 use App\Services\CreateTranscriptFileService;
 use App\Services\LoadersService;
@@ -92,7 +92,7 @@ final class ProcessYoutubeVideo implements ShouldQueue
             'metadata' => $metadata,
         ]));
 
-        event(new VideoProcessed($this->chatId, $this->question));
+        YoutubeVideoProcessed::dispatch($this->chatId, $this->question);
     }
 
     private function addFileToVectorStore(
