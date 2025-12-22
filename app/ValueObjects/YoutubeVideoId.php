@@ -27,11 +27,6 @@ final class YoutubeVideoId
         return new self($videoId);
     }
 
-    public static function fromYoutubeUrl(YoutubeUrl $youtubeUrl): self
-    {
-        return new self(Str::of($youtubeUrl->value())->after('?v=')->value());
-    }
-
     public function value(): string
     {
         return $this->id;

@@ -20,7 +20,8 @@ final readonly class UniversalTranscriptService
         private string $baseUrl,
         #[Config('services.supadata.api_key')]
         private string $apiKey,
-    ) {}
+    ) {
+    }
 
     /**
      * @see https://docs.supadata.ai/get-transcript
@@ -33,7 +34,7 @@ final readonly class UniversalTranscriptService
         ?string $lang = null,
         ?string $mode = 'native',
         bool $text = false
-    ): Error|Transcript {
+    ): Error|Transcript|string {
         $response = Http::timeout(240)->baseUrl($this->baseUrl)->withHeaders([
             'x-api-key' => $this->apiKey,
         ])->get('transcript', [
@@ -43,10 +44,10 @@ final readonly class UniversalTranscriptService
             'text' => json_encode($text),
         ])->throw();
 
-        if ($response->getStatusCode() === Response::HTTP_PARTIAL_CONTENT) {
-            return Error::from($response->json());
-        }
-
-        return Transcript::from($response->json());
+        return match ($response->getStatusCode()) {
+            Response::HTTP_PARTIAL_CONTENT => Error::from($response->json()),
+            Response::HTTP_ACCEPTED => $response->json('jobId'),
+            Response::HTTP_OK => Transcript::from($response->json()),
+        };
     }
 }

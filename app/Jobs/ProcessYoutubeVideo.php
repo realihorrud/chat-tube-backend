@@ -50,6 +50,7 @@ final class ProcessYoutubeVideo implements ShouldQueue
     ): void {
         $loaderService->startProgress('Start processing video', $this->chatId);
 
+        $loaderService->incrementLoadingBy($this->chatId, 2, 6);
         $transcript = $sdk->universalTranscript()->getTranscript($this->videoUrl);
         if ($transcript instanceof Error) {
             $api->sendMessage([
@@ -62,7 +63,7 @@ final class ProcessYoutubeVideo implements ShouldQueue
         }
         $metadata = $sdk->universalMetadata()->getMetadata($this->videoUrl->toUrl());
 
-        $loaderService->incrementLoadingBy($this->chatId, 5, 6);
+        $loaderService->incrementLoadingBy($this->chatId, 3, 6);
 
         $filename = $createTranscriptFileService->handle($metadata, $transcript);
         $file = OpenAI::files()->upload([
