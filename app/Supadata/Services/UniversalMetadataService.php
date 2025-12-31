@@ -28,7 +28,7 @@ final readonly class UniversalMetadataService
      */
     public function getMetadata(Url $url): Metadata
     {
-        $response = Http::baseUrl($this->baseUrl)->withHeaders([
+        $response = Http::timeout(240)->baseUrl($this->baseUrl)->withHeaders([
             'x-api-key' => $this->apiKey,
         ])->get('metadata', ['url' => $url->value()])->throw()->json();
 

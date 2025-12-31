@@ -26,7 +26,7 @@ final class ProcessYoutubeVideo implements ShouldQueue
 {
     use Queueable;
 
-    public int $timeout = 60;
+    public int $timeout = 120;
 
     public function __construct(
         public readonly int $chatId,

@@ -34,7 +34,7 @@ final class YoutubeVideosService
             $youtubeVideo->description = $dto->metadata->description;
             $youtubeVideo->tags = $dto->metadata->tags;
             $youtubeVideo->additional_data = $dto->metadata->additionalData;
-            $youtubeVideo->uploaded_at = $dto->metadata->createdAt;
+            $youtubeVideo->uploaded_at = $dto->metadata->createdAt instanceof Optional ? null : $dto->metadata->createdAt;
             $youtubeVideo->save();
 
             $this->saveVideoStats($youtubeVideo, $dto->metadata->stats);

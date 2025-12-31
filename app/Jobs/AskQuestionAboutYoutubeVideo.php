@@ -21,9 +21,9 @@ final class AskQuestionAboutYoutubeVideo implements ShouldQueue
 {
     use Queueable;
 
-    private const string INSTRUCTIONS = 'Answer questions in user\'s language based on the video transcript from vector file store. First answer, then add evidence from transcript with timestamps if applicable, if not just answer. Prefer markdown style, but without headings, because it\'s intended for Telegram. Answer only on questions related to video\'s transcript';
+    private const string INSTRUCTIONS = 'Answer questions in user\'s language based on the video transcript from vector file store. Prefer markdown style, but without headings, because it\'s intended for Telegram. Answer only on questions related to video\'s transcript. Make sure your response is under 4096 characters';
 
-    public int $timeout = 180;
+    public int $timeout = 240;
 
     public function __construct(
         public readonly int $chatId,
@@ -70,7 +70,6 @@ final class AskQuestionAboutYoutubeVideo implements ShouldQueue
             'message_id' => (int) $chatState->last_message_id,
             'chat_id' => $this->chatId,
             'text' => $responseService->linkTimestamps($response->outputText, YoutubeUrl::fromString($video->url)),
-            'parse_mode' => 'Markdown',
             'link_preview_options' => [
                 'is_disabled' => true,
             ],
