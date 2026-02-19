@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $username
  * @property string|null $language_code
  * @property-read ChatState|null $chatState
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Chat> $chats
  *
  * @method static Builder<static>|TelegramUser byChatId(int $chatId)
  * @method static Builder<static>|TelegramUser newModelQuery()
@@ -45,6 +47,14 @@ final class TelegramUser extends Model
     public function chatState(): HasOne
     {
         return $this->hasOne(ChatState::class, 'chat_id', 'telegram_id');
+    }
+
+    /**
+     * @return HasMany<Chat, $this>
+     */
+    public function chats(): HasMany
+    {
+        return $this->hasMany(Chat::class);
     }
 
     /**

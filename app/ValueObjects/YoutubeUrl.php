@@ -12,7 +12,7 @@ final readonly class YoutubeUrl
 
     private function __construct(string $url)
     {
-        $pattern = '(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:\S+)?$|^([a-zA-Z0-9_-]{11})';
+        $pattern = '((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?';
 
         if (! preg_match("/^$pattern$/", $url)) {
             throw new InvalidArgumentException('Youtube url is not valid.');

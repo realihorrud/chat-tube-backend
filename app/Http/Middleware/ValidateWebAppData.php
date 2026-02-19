@@ -33,7 +33,7 @@ final class ValidateWebAppData extends BaseValidateWebAppData
 
         /** @var \SergiX44\Nutgram\Telegram\Types\User\User $webAppUser */
         $webAppUser = $request->attributes->get('webAppData')->user;
-        $this->usersService->createOrUpdate(User::from([
+        $telegramUser = $this->usersService->createOrUpdate(User::from([
             'id' => $webAppUser->id,
             'first_name' => $webAppUser->first_name,
             'last_name' => $webAppUser->last_name,
@@ -41,6 +41,8 @@ final class ValidateWebAppData extends BaseValidateWebAppData
             'language_code' => $webAppUser->language_code,
             'is_bot' => $webAppUser->is_bot,
         ]));
+
+        $request->attributes->set('telegramUser', $telegramUser);
 
         return $next($request);
     }
