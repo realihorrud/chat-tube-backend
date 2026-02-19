@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Actions\AskQuestionAction;
+use App\DTOs\Message\MessageData;
 use App\Http\Requests\StoreMessageRequest;
 use App\Models\Chat;
 use App\Models\TelegramUser;
@@ -22,7 +23,7 @@ final class MessageController
 
         $messages = $chat->messages()->oldest()->paginate();
 
-        return response()->json($messages);
+        return response()->json(MessageData::collect($messages));
     }
 
     /**
@@ -36,6 +37,6 @@ final class MessageController
 
         $assistantMessage = $askQuestion->handle($chat, $request->validated('content'));
 
-        return response()->json($assistantMessage, 201);
+        return response()->json(MessageData::from($assistantMessage), 201);
     }
 }

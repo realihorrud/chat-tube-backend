@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Actions\CreateChatAction;
+use App\DTOs\Chat\ChatData;
 use App\Http\Requests\StoreChatRequest;
 use App\Models\Chat;
 use App\Models\TelegramUser;
@@ -25,7 +26,7 @@ final class ChatController
             ->latest()
             ->paginate();
 
-        return response()->json($chats);
+        return response()->json(ChatData::collect($chats));
     }
 
     /**
@@ -38,7 +39,7 @@ final class ChatController
 
         $chat = $createChat->handle($telegramUser, $request->youtubeUrl());
 
-        return response()->json($chat->load('youtubeVideo', 'messages'), 201);
+        return response()->json(ChatData::from($chat->load('youtubeVideo', 'messages')), 201);
     }
 
     public function show(Request $request, Chat $chat): JsonResponse
@@ -47,7 +48,7 @@ final class ChatController
         $telegramUser = $request->attributes->get('telegramUser');
         abort_unless($chat->telegram_user_id === $telegramUser->id, 403);
 
-        return response()->json($chat->load('youtubeVideo', 'messages'));
+        return response()->json(ChatData::from($chat->load('youtubeVideo', 'messages')));
     }
 
     public function destroy(Request $request, Chat $chat): JsonResponse

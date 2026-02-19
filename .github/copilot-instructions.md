@@ -64,6 +64,10 @@ Follow this element ordering within classes (enforced by Pint):
 - DTOs extend `Spatie\LaravelData\Data` with typed properties.
 - Both must be immutable (`readonly`).
 
+### HTTP Controllers
+
+- **Never return Eloquent models directly from HTTP controllers.** Always use Spatie Laravel Data objects (`Data::from()` for single models, `Data::collect()` for collections/paginated results) to transform responses.
+
 ### Exception Handling
 
 - Business exceptions extend `BusinessException` (abstract), carry `chatId` context.
