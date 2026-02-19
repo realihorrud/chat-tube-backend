@@ -65,7 +65,7 @@ RUN if [ "$APP_ENV" = "local" ]; then \
       docker-php-ext-enable xdebug; \
     fi
 
-RUN echo 'alias a="php artisan"' >> ~/.bashrc
+RUN echo 'alias ar="php artisan"' >> ~/.bashrc
 
 # Setup cron job
 COPY .docker/cron/cronjob /etc/cron.d/cronjob

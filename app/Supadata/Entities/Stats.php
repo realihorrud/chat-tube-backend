@@ -10,7 +10,7 @@ final class Stats extends Dto
 {
     public function __construct(
         public int $views,
-        public int $likes,
+        public ?int $likes,
         public ?int $shares,
         public ?int $comments,
     ) {}

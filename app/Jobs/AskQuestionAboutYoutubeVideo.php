@@ -42,7 +42,7 @@ final class AskQuestionAboutYoutubeVideo implements ShouldQueue
 
         $video = YoutubeVideo::latestUploadedVideo($this->chatId)->first();
 
-        $loaderService->incrementLoadingBy($this->chatId, by: 6, times: 9);
+//        $loaderService->incrementLoadingBy($this->chatId, by: 6, times: 9);
 
         $response = OpenAI::responses()->create([
             'model' => 'gpt-5',
@@ -58,11 +58,11 @@ final class AskQuestionAboutYoutubeVideo implements ShouldQueue
             ],
         ]);
 
-        $loaderService->incrementLoadingBy($this->chatId, by: 6);
+//        $loaderService->incrementLoadingBy($this->chatId, by: 6);
 
         Assert::string($response->outputText);
 
-        $loaderService->incrementLoadingBy($this->chatId, times: 3);
+//        $loaderService->incrementLoadingBy($this->chatId, times: 3);
 
         $chatState->refresh();
 

@@ -26,7 +26,7 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
      */
     public function getMe(): array
     {
-        return Http::baseUrl($this->baseUrl)
+        return Http::timeout(240)->baseUrl($this->baseUrl)
             ->throw()
             ->get('getMe')
             ->json();
@@ -37,7 +37,7 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
      */
     public function setWebhook(): bool
     {
-        return Http::baseUrl($this->baseUrl)
+        return Http::timeout(240)->baseUrl($this->baseUrl)
             ->throw()
             ->post('setWebhook', [
                 'url' => Uri::of(route('telegram.webhook')),
@@ -50,7 +50,7 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
      */
     public function deleteWebhook(): bool
     {
-        return Http::baseUrl($this->baseUrl)
+        return Http::timeout(240)->baseUrl($this->baseUrl)
             ->throw()
             ->post('deleteWebhook')
             ->successful();
@@ -61,7 +61,7 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
      */
     public function getWebhookInfo(): array
     {
-        return Http::baseUrl($this->baseUrl)
+        return Http::timeout(240)->baseUrl($this->baseUrl)
             ->throw()
             ->get('getWebhookInfo')
             ->json();
@@ -90,7 +90,7 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
      */
     public function sendMessage(array $params): Message
     {
-        $response = Http::baseUrl($this->baseUrl)
+        $response = Http::timeout(240)->baseUrl($this->baseUrl)
             ->throw()
             ->post('sendMessage', $params)
             ->json();
@@ -104,7 +104,7 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
     public function deleteMessage(int $chatId, int $messageId): bool
     {
         try {
-            Http::baseUrl($this->baseUrl)
+            Http::timeout(240)->baseUrl($this->baseUrl)
                 ->throw()
                 ->post('deleteMessage', ['chat_id' => $chatId, 'message_id' => $messageId])
                 ->json();
@@ -139,7 +139,7 @@ final readonly class ActualTelegramBotApi implements TelegramBotApi
      */
     public function editMessageText(array $params): Message|bool
     {
-        $response = Http::baseUrl($this->baseUrl)
+        $response = Http::timeout(240)->baseUrl($this->baseUrl)
             ->throw()
             ->post('editMessageText', $params)
             ->json();
