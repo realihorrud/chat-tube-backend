@@ -1,5 +1,7 @@
 <?php
-/** @var SergiX44\Nutgram\Nutgram $bot */
+
+declare(strict_types=1);
+/** @var Nutgram $bot */
 
 use SergiX44\Nutgram\Nutgram;
 
@@ -13,6 +15,6 @@ use SergiX44\Nutgram\Nutgram;
 |
 */
 
-$bot->onCommand('start', function (Nutgram $bot) {
+$bot->onCommand('start', function (Nutgram $bot): void {
     $bot->sendMessage('Hello, world!');
 })->description('The start command!');

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Telegram\Entities;
 
 use Spatie\LaravelData\Dto;
-use Spatie\LaravelData\Optional;
 
 final class User extends Dto
 {
@@ -13,11 +12,11 @@ final class User extends Dto
         public int $id,
         public bool $is_bot,
         public string $first_name,
-        public Optional|string $last_name = '',
-        public Optional|string $username = '',
-        public Optional|string $language_code = 'en',
-        public Optional|bool $is_premium = false,
-        public Optional|bool $added_to_attachment_menu = false,
-        public Optional|bool $has_main_web_app = false,
+        public ?string $last_name = '',
+        public ?string $username = '',
+        public ?string $language_code = 'en',
+        public ?bool $is_premium = false,
+        public ?bool $added_to_attachment_menu = false,
+        public ?bool $has_main_web_app = false,
     ) {}
 }

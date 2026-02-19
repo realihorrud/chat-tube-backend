@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use Nutgram\Laravel\Middleware\ValidateWebAppData;
+declare(strict_types=1);
 
-Route::middleware(ValidateWebAppData::class)->group(function () {
+use App\Http\Middleware\ValidateWebAppData;
+use Illuminate\Support\Facades\Route;
+
+Route::middleware(ValidateWebAppData::class)->group(function (): void {
     // Routes go here...
 });

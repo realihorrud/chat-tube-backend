@@ -20,8 +20,7 @@ final readonly class UniversalTranscriptService
         private string $baseUrl,
         #[Config('services.supadata.api_key')]
         private string $apiKey,
-    ) {
-    }
+    ) {}
 
     /**
      * @see https://docs.supadata.ai/get-transcript
