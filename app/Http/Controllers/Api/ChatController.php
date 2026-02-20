@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Actions\CreateChatAction;
+use App\Actions\CreateChat;
 use App\DTOs\Chat\ChatData;
 use App\Http\Requests\StoreChatRequest;
 use App\Models\Chat;
@@ -32,7 +32,7 @@ final class ChatController
     /**
      * @throws Throwable
      */
-    public function store(StoreChatRequest $request, CreateChatAction $createChat): JsonResponse
+    public function store(StoreChatRequest $request, CreateChat $createChat): JsonResponse
     {
         /** @var TelegramUser $telegramUser */
         $telegramUser = $request->attributes->get('telegramUser');

@@ -21,9 +21,9 @@ final class YoutubeVideosService
     /**
      * @throws Throwable
      */
-    public function saveYoutubeVideo(YoutubeVideoDTO $dto): void
+    public function saveYoutubeVideo(YoutubeVideoDTO $dto): YoutubeVideo
     {
-        DB::transaction(function () use ($dto): void {
+        return DB::transaction(function () use ($dto): YoutubeVideo {
             $youtubeVideo = new YoutubeVideo();
             $youtubeVideo->chat_id = $dto->chat_id;
             $youtubeVideo->vector_store_id = $dto->vector_store_id;
@@ -40,6 +40,8 @@ final class YoutubeVideosService
             $this->saveVideoStats($youtubeVideo, $dto->metadata->stats);
             $this->saveVideoAuthor($youtubeVideo, $dto->metadata->author);
             $this->saveVideoMedia($youtubeVideo, $dto->metadata->media);
+
+            return $youtubeVideo;
         });
     }
 

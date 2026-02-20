@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Supadata\Entities\Content;
 use App\Supadata\Entities\Metadata;
 use App\Supadata\Entities\Transcript;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use LogicException;
 
@@ -19,6 +20,8 @@ final class CreateTranscriptFileService
         $file = fopen($filename, 'w');
         fwrite($file, $this->getFileContent($metadata, $transcript));
         fclose($file);
+
+        Log::info('Transcript saved in ' . $filename);
 
         return $filename;
     }

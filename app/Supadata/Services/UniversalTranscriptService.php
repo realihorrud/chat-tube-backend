@@ -11,6 +11,7 @@ use Illuminate\Container\Attributes\Config;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 final readonly class UniversalTranscriptService
@@ -34,6 +35,8 @@ final readonly class UniversalTranscriptService
         ?string $mode = 'native',
         bool $text = false
     ): Error|Transcript|string {
+        Log::channel('supadata')->info('Getting transcription for the video. YT URL: ' . $url->value());
+
         $response = Http::timeout(240)->baseUrl($this->baseUrl)->withHeaders([
             'x-api-key' => $this->apiKey,
         ])->get('transcript', [

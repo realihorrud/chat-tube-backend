@@ -10,6 +10,7 @@ use Illuminate\Container\Attributes\Config;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 final readonly class UniversalMetadataService
 {
@@ -28,6 +29,8 @@ final readonly class UniversalMetadataService
      */
     public function getMetadata(Url $url): Metadata
     {
+        Log::channel('supadata')->info('Getting metadata for the video. YT URL: ' . $url->value());
+
         $response = Http::timeout(240)->baseUrl($this->baseUrl)->withHeaders([
             'x-api-key' => $this->apiKey,
         ])->get('metadata', ['url' => $url->value()])->throw()->json();

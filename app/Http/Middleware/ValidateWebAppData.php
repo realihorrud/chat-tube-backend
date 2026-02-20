@@ -9,6 +9,7 @@ use App\Telegram\Entities\User;
 use Closure;
 use Illuminate\Http\Request;
 use Nutgram\Laravel\Middleware\ValidateWebAppData as BaseValidateWebAppData;
+use SergiX44\Nutgram\Exception\InvalidDataException;
 use SergiX44\Nutgram\Nutgram;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -29,21 +30,31 @@ final class ValidateWebAppData extends BaseValidateWebAppData
      */
     public function handle(Request $request, Closure $next): Response
     {
-        parent::handle($request, $next);
+        try {
+            $initData = explode(' ', $request->headers->get('Authorization', ''));
+            if (count($initData) < 2) {
+                $initData = '';
+            } else {
+                $initData = $initData[count($initData) - 1];
+            }
+            $data = $this->bot->validateWebAppData($initData);
 
-        /** @var \SergiX44\Nutgram\Telegram\Types\User\User $webAppUser */
-        $webAppUser = $request->attributes->get('webAppData')->user;
-        $telegramUser = $this->usersService->createOrUpdate(User::from([
-            'id' => $webAppUser->id,
-            'first_name' => $webAppUser->first_name,
-            'last_name' => $webAppUser->last_name,
-            'username' => $webAppUser->username,
-            'language_code' => $webAppUser->language_code,
-            'is_bot' => $webAppUser->is_bot,
-        ]));
+            $request->attributes->add(['webAppData' => $data]);
 
-        $request->attributes->set('telegramUser', $telegramUser);
+            $telegramUser = $this->usersService->createOrUpdate(User::from([
+                'id' => $data->user->id,
+                'first_name' => $data->user->first_name,
+                'last_name' => $data->user->last_name,
+                'username' => $data->user->username,
+                'language_code' => $data->user->language_code,
+                'is_bot' => $data->user->is_bot,
+            ]));
 
-        return $next($request);
+            $request->attributes->set('telegramUser', $telegramUser);
+
+            return $next($request);
+        } catch (InvalidDataException) {
+            return $this->handleInvalidData($request, $next);
+        }
     }
 }

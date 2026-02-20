@@ -16,10 +16,11 @@ use App\Supadata\SupadataSDK;
 use App\ValueObjects\YoutubeUrl;
 use Illuminate\Container\Attributes\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use OpenAI\Laravel\Facades\OpenAI;
 use Throwable;
 
-final readonly class CreateChatAction
+final readonly class CreateChat
 {
     public function __construct(
         private SupadataSDK $sdk,
@@ -36,9 +37,9 @@ final readonly class CreateChatAction
     {
         $chat = DB::transaction(function () use ($telegramUser): Chat {
             $chat = new Chat;
-            $chat->telegram_user_id = $telegramUser->id;
             $chat->status = ChatStatus::Processing;
-            $chat->save();
+
+            $telegramUser->chats()->save($chat);
 
             return $chat;
         });
@@ -71,10 +72,13 @@ final readonly class CreateChatAction
         $metadata = $this->sdk->universalMetadata()->getMetadata($videoUrl->toUrl());
 
         $filename = $this->createTranscriptFileService->handle($metadata, $transcript);
+
         $file = OpenAI::files()->upload([
             'file' => fopen($filename, 'r'),
             'purpose' => 'assistants',
         ]);
+
+        Log::channel('openai')->info('Transcription file was uploaded to OpenAI');
 
         $vectorStoreId = OpenAI::vectorStores()->create(
             parameters: [
@@ -86,22 +90,21 @@ final readonly class CreateChatAction
             ],
         )->id;
 
+        Log::channel('openai')->info('Vector store was successfully created');
+
         OpenAI::vectorStores()->files()->create($vectorStoreId, ['file_id' => $file->id]);
 
-        $this->youtubeVideosService->saveYoutubeVideo(YoutubeVideoDTO::from([
+        Log::channel('openai')->info('Transcription file was successfully attached to vector store');
+
+        $youtubeVideo = $this->youtubeVideosService->saveYoutubeVideo(YoutubeVideoDTO::from([
             'chat_id' => $chat->id,
             'file_id' => $file->id,
             'vector_store_id' => $vectorStoreId,
             'metadata' => $metadata,
         ]));
 
-        DB::transaction(function () use ($chat, $metadata): void {
-            $youtubeVideo = YoutubeVideo::query()
-                ->where('chat_id', $chat->telegramUser->telegram_id)
-                ->latest()
-                ->first();
-
-            $chat->youtube_video_id = $youtubeVideo?->id;
+        DB::transaction(function () use ($chat, $metadata, $youtubeVideo): void {
+            $chat->youtube_video_id = $youtubeVideo->id;
             $chat->title = $metadata->title;
             $chat->status = ChatStatus::Ready;
             $chat->save();
