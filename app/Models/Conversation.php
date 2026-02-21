@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $youtube_video_id
  * @property string|null $title
  * @property ConversationStatus $status
+ * @property int $order
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, ConversationMessage> $conversationMessages

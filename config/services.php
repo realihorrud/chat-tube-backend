@@ -40,6 +40,7 @@ return [
     'telegram' => [
         'api_url' => env('TELEGRAM_API_URL').env('TELEGRAM_BOT_TOKEN').'/',
         'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'mini_app_url' => env('TELEGRAM_MINI_APP_URL', 'https://t.me/chat_tube_dev_bot/App'),
     ],
 
     'supadata' => [
