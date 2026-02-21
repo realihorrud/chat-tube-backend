@@ -49,7 +49,7 @@ return [
     ],
 
     'open_ai' => [
-        'model' => 'gpt-4.1',
+        'model' => env('OPENAI_MODEL', 'gpt-4.1-mini'),
         'vector_stores' => [
             'expires_in_days' => 30,
         ],

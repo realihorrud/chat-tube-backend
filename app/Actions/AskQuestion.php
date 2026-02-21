@@ -8,6 +8,7 @@ use App\Enums\ConversationStatus;
 use App\Enums\MessageRole;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
+use Illuminate\Container\Attributes\Config;
 use Illuminate\Support\Facades\DB;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\StreamResponse;
@@ -27,6 +28,12 @@ Guidelines:
 - Base every response strictly on transcript content.
 - Use markdown formatting for answers.
 EOF;
+
+    public function __construct(
+        #[Config('services.openai.model')]
+        private string $model,
+    ) {
+    }
 
     /**
      * @throws Throwable
@@ -49,7 +56,7 @@ EOF;
         $video = $conversation->youtubeVideo;
 
         return OpenAI::responses()->createStreamed([
-            'model' => 'gpt-5',
+            'model' => $this->model,
             'instructions' => self::INSTRUCTIONS,
             'input' => $question,
             'tools' => [
