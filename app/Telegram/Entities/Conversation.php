@@ -7,7 +7,7 @@ namespace App\Telegram\Entities;
 use Spatie\LaravelData\Dto;
 use Spatie\LaravelData\Optional;
 
-final class Chat extends Dto
+final class Conversation extends Dto
 {
     public function __construct(
         public int $id,

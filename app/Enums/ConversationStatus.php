@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum ChatStatus: string
+enum ConversationStatus: string
 {
     case Pending = 'pending';
     case Processing = 'processing';

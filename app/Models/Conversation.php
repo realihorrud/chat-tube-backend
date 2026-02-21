@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\ChatStatus;
+use App\Enums\ConversationStatus;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $telegram_user_id
  * @property int|null $youtube_video_id
  * @property string|null $title
- * @property ChatStatus $status
+ * @property ConversationStatus $status
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  * @property-read TelegramUser $telegramUser
@@ -24,10 +24,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @mixin \Eloquent
  */
-final class Chat extends Model
+final class Conversation extends Model
 {
     protected $casts = [
-        'status' => ChatStatus::class,
+        'status' => ConversationStatus::class,
     ];
 
     /**

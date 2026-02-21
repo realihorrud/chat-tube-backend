@@ -29,7 +29,7 @@ final readonly class UniversalMetadataService
      */
     public function getMetadata(Url $url): Metadata
     {
-        Log::channel('supadata')->info('Getting metadata for the video. YT URL: ' . $url->value());
+        Log::channel('supadata')->info('Getting metadata for the video. YT URL: '.$url->value());
 
         $response = Http::timeout(240)->baseUrl($this->baseUrl)->withHeaders([
             'x-api-key' => $this->apiKey,

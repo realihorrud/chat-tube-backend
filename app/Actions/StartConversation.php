@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\DTOs\YoutubeVideo\YoutubeVideoDTO;
-use App\Enums\ChatStatus;
-use App\Models\Chat;
+use App\Enums\ConversationStatus;
+use App\Models\Conversation;
 use App\Models\TelegramUser;
-use App\Models\YoutubeVideo;
 use App\Services\CreateTranscriptFileService;
 use App\Services\YoutubeVideosService;
 use App\Supadata\Entities\Error;
@@ -20,7 +19,7 @@ use Illuminate\Support\Facades\Log;
 use OpenAI\Laravel\Facades\OpenAI;
 use Throwable;
 
-final readonly class CreateChat
+final readonly class StartConversation
 {
     public function __construct(
         private SupadataSDK $sdk,
@@ -33,11 +32,11 @@ final readonly class CreateChat
     /**
      * @throws Throwable
      */
-    public function handle(TelegramUser $telegramUser, YoutubeUrl $videoUrl): Chat
+    public function handle(TelegramUser $telegramUser, YoutubeUrl $videoUrl): Conversation
     {
-        $chat = DB::transaction(function () use ($telegramUser): Chat {
-            $chat = new Chat;
-            $chat->status = ChatStatus::Processing;
+        $chat = DB::transaction(function () use ($telegramUser): Conversation {
+            $chat = new Conversation;
+            $chat->status = ConversationStatus::Processing;
 
             $telegramUser->chats()->save($chat);
 
@@ -47,7 +46,7 @@ final readonly class CreateChat
         try {
             $this->processVideo($chat, $videoUrl);
         } catch (Throwable $e) {
-            $chat->status = ChatStatus::Failed;
+            $chat->status = ConversationStatus::Failed;
             $chat->save();
 
             throw $e;
@@ -59,11 +58,11 @@ final readonly class CreateChat
     /**
      * @throws Throwable
      */
-    private function processVideo(Chat $chat, YoutubeUrl $videoUrl): void
+    private function processVideo(Conversation $chat, YoutubeUrl $videoUrl): void
     {
         $transcript = $this->sdk->universalTranscript()->getTranscript($videoUrl);
         if ($transcript instanceof Error) {
-            $chat->status = ChatStatus::Failed;
+            $chat->status = ConversationStatus::Failed;
             $chat->save();
 
             return;
@@ -106,7 +105,7 @@ final readonly class CreateChat
         DB::transaction(function () use ($chat, $metadata, $youtubeVideo): void {
             $chat->youtube_video_id = $youtubeVideo->id;
             $chat->title = $metadata->title;
-            $chat->status = ChatStatus::Ready;
+            $chat->status = ConversationStatus::Ready;
             $chat->save();
         });
     }

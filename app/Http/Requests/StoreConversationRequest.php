@@ -7,7 +7,7 @@ namespace App\Http\Requests;
 use App\ValueObjects\YoutubeUrl;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class StoreChatRequest extends FormRequest
+final class StoreConversationRequest extends FormRequest
 {
     /**
      * @return array<string, mixed>

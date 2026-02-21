@@ -21,7 +21,7 @@ final class CreateTranscriptFileService
         fwrite($file, $this->getFileContent($metadata, $transcript));
         fclose($file);
 
-        Log::info('Transcript saved in ' . $filename);
+        Log::info('Transcript saved in '.$filename);
 
         return $filename;
     }

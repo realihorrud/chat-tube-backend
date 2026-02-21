@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $content
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
- * @property-read Chat $chat
+ * @property-read Conversation $chat
  *
  * @mixin \Eloquent
  */
@@ -27,10 +27,10 @@ final class Message extends Model
     ];
 
     /**
-     * @return BelongsTo<Chat, $this>
+     * @return BelongsTo<Conversation, $this>
      */
     public function chat(): BelongsTo
     {
-        return $this->belongsTo(Chat::class);
+        return $this->belongsTo(Conversation::class);
     }
 }

@@ -6,7 +6,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-final class StoreMessageRequest extends FormRequest
+final class StoreConversationMessageRequest extends FormRequest
 {
     /**
      * @return array<string, mixed>

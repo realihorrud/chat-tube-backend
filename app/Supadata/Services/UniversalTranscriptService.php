@@ -35,7 +35,7 @@ final readonly class UniversalTranscriptService
         ?string $mode = 'native',
         bool $text = false
     ): Error|Transcript|string {
-        Log::channel('supadata')->info('Getting transcription for the video. YT URL: ' . $url->value());
+        Log::channel('supadata')->info('Getting transcription for the video. YT URL: '.$url->value());
 
         $response = Http::timeout(240)->baseUrl($this->baseUrl)->withHeaders([
             'x-api-key' => $this->apiKey,

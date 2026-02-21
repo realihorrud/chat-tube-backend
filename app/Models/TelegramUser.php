@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $username
  * @property string|null $language_code
  * @property-read ChatState|null $chatState
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Chat> $chats
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Conversation> $chats
  *
  * @method static Builder<static>|TelegramUser byChatId(int $chatId)
  * @method static Builder<static>|TelegramUser newModelQuery()
@@ -50,11 +50,11 @@ final class TelegramUser extends Model
     }
 
     /**
-     * @return HasMany<Chat, $this>
+     * @return HasMany<Conversation, $this>
      */
     public function chats(): HasMany
     {
-        return $this->hasMany(Chat::class);
+        return $this->hasMany(Conversation::class);
     }
 
     /**
