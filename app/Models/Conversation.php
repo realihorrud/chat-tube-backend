@@ -6,26 +6,41 @@ namespace App\Models;
 
 use App\Enums\ConversationStatus;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $id
- * @property int $telegram_user_id
- * @property int|null $youtube_video_id
+ * @property string $id
+ * @property string $telegram_user_id
+ * @property string|null $youtube_video_id
  * @property string|null $title
  * @property ConversationStatus $status
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ConversationMessage> $conversationMessages
+ * @property-read int|null $conversation_messages_count
  * @property-read TelegramUser $telegramUser
  * @property-read YoutubeVideo|null $youtubeVideo
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Message> $messages
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereTelegramUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereYoutubeVideoId($value)
  *
  * @mixin \Eloquent
  */
 final class Conversation extends Model
 {
+    use HasUuids;
+
     protected $casts = [
         'status' => ConversationStatus::class,
     ];
@@ -47,10 +62,10 @@ final class Conversation extends Model
     }
 
     /**
-     * @return HasMany<Message, $this>
+     * @return HasMany<ConversationMessage, $this>
      */
-    public function messages(): HasMany
+    public function conversationMessages(): HasMany
     {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(ConversationMessage::class);
     }
 }

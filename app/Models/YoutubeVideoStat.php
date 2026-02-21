@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $id
+ * @property string $id
  * @property int $views
- * @property int $likes
+ * @property int|null $likes
  * @property int|null $shares
  * @property int|null $comments
- * @property int $youtube_video_id
+ * @property string $youtube_video_id
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read YoutubeVideo|null $video
@@ -34,6 +35,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 final class YoutubeVideoStat extends Model
 {
+    use HasUuids;
+
     /**
      * @return BelongsTo<YoutubeVideo, $this>
      */

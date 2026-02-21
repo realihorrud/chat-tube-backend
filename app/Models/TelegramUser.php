@@ -6,12 +6,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property int $id
+ * @property string $id
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property int $telegram_id
@@ -19,8 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $last_name
  * @property string|null $username
  * @property string|null $language_code
- * @property-read ChatState|null $chatState
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Conversation> $chats
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Conversation> $conversations
+ * @property-read int|null $conversations_count
  *
  * @method static Builder<static>|TelegramUser byChatId(int $chatId)
  * @method static Builder<static>|TelegramUser newModelQuery()
@@ -39,20 +39,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 final class TelegramUser extends Model
 {
-    protected $table = 'telegram_users';
+    use HasUuids;
 
-    /**
-     * @return HasOne<ChatState, $this>
-     */
-    public function chatState(): HasOne
-    {
-        return $this->hasOne(ChatState::class, 'chat_id', 'telegram_id');
-    }
+    protected $table = 'telegram_users';
 
     /**
      * @return HasMany<Conversation, $this>
      */
-    public function chats(): HasMany
+    public function conversations(): HasMany
     {
         return $this->hasMany(Conversation::class);
     }

@@ -6,21 +6,21 @@ namespace App\Actions;
 
 use App\Enums\MessageRole;
 use App\Models\Conversation;
-use App\Models\Message;
+use App\Models\ConversationMessage;
 use Illuminate\Support\Facades\DB;
 
 final class CreateConversationMessage
 {
-    public function handle(Conversation $chat, string $answerContent): Message
+    public function handle(Conversation $conversation, string $answerContent): ConversationMessage
     {
-        return DB::transaction(function () use ($chat, $answerContent): Message {
-            $message = new Message;
-            $message->role = MessageRole::Assistant;
-            $message->content = $answerContent;
+        return DB::transaction(function () use ($conversation, $answerContent): ConversationMessage {
+            $conversationMessage = new ConversationMessage;
+            $conversationMessage->role = MessageRole::Assistant;
+            $conversationMessage->content = $answerContent;
 
-            $chat->messages()->save($message);
+            $conversation->conversationMessages()->save($conversationMessage);
 
-            return $message;
+            return $conversationMessage;
         });
     }
 }

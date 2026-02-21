@@ -34,36 +34,36 @@ final readonly class StartConversation
      */
     public function handle(TelegramUser $telegramUser, YoutubeUrl $videoUrl): Conversation
     {
-        $chat = DB::transaction(function () use ($telegramUser): Conversation {
-            $chat = new Conversation;
-            $chat->status = ConversationStatus::Processing;
+        $conversation = DB::transaction(function () use ($telegramUser): Conversation {
+            $conversation = new Conversation;
+            $conversation->status = ConversationStatus::Processing;
 
-            $telegramUser->chats()->save($chat);
+            $telegramUser->conversations()->save($conversation);
 
-            return $chat;
+            return $conversation;
         });
 
         try {
-            $this->processVideo($chat, $videoUrl);
+            $this->processVideo($conversation, $videoUrl);
         } catch (Throwable $e) {
-            $chat->status = ConversationStatus::Failed;
-            $chat->save();
+            $conversation->status = ConversationStatus::Failed;
+            $conversation->save();
 
             throw $e;
         }
 
-        return $chat->refresh();
+        return $conversation->refresh();
     }
 
     /**
      * @throws Throwable
      */
-    private function processVideo(Conversation $chat, YoutubeUrl $videoUrl): void
+    private function processVideo(Conversation $conversation, YoutubeUrl $videoUrl): void
     {
         $transcript = $this->sdk->universalTranscript()->getTranscript($videoUrl);
         if ($transcript instanceof Error) {
-            $chat->status = ConversationStatus::Failed;
-            $chat->save();
+            $conversation->status = ConversationStatus::Failed;
+            $conversation->save();
 
             return;
         }
@@ -96,17 +96,17 @@ final readonly class StartConversation
         Log::channel('openai')->info('Transcription file was successfully attached to vector store');
 
         $youtubeVideo = $this->youtubeVideosService->saveYoutubeVideo(YoutubeVideoDTO::from([
-            'chat_id' => $chat->id,
+            'chat_id' => $conversation->id,
             'file_id' => $file->id,
             'vector_store_id' => $vectorStoreId,
             'metadata' => $metadata,
         ]));
 
-        DB::transaction(function () use ($chat, $metadata, $youtubeVideo): void {
-            $chat->youtube_video_id = $youtubeVideo->id;
-            $chat->title = $metadata->title;
-            $chat->status = ConversationStatus::Ready;
-            $chat->save();
+        DB::transaction(function () use ($conversation, $metadata, $youtubeVideo): void {
+            $conversation->youtube_video_id = $youtubeVideo->id;
+            $conversation->title = $metadata->title;
+            $conversation->status = ConversationStatus::Ready;
+            $conversation->save();
         });
     }
 }

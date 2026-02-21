@@ -105,3 +105,10 @@ Run all checks with: `composer test`
 3. **New domain entity** → create Model + Migration + DTO + Service.
 4. **New external integration** → create a dedicated SDK directory under `app/` with entities, enums, and services.
 5. **Database changes** → always wrap multi-model writes in `DB::transaction()`.
+
+## Database IDs
+
+- All Eloquent models use **UUIDs** as primary keys (not auto-incrementing integers).
+- Models use Laravel's `HasUuids` trait (`Illuminate\Database\Eloquent\Concerns\HasUuids`).
+- Migrations use `$table->uuid('id')->primary()` for primary keys and `$table->foreignUuid()` for foreign keys.
+- ID properties in models, DTOs, and value objects are typed as `string`, not `int`.

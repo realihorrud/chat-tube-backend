@@ -12,7 +12,7 @@ final class YoutubeVideoDTO extends Dto
     public function __construct(
         public readonly string $vector_store_id,
         public readonly string $file_id,
-        public readonly int $chat_id,
+        public readonly string $chat_id,
         public readonly Metadata $metadata,
     ) {}
 }

@@ -21,15 +21,15 @@ final class ConversationMessageController
 {
     private const string RESPONSE_OUTPUT_TEXT_DELTA = 'response.output_text.delta';
 
-    public function index(Request $request, Conversation $chat): JsonResponse
+    public function index(Request $request, Conversation $conversation): JsonResponse
     {
         /** @var TelegramUser $telegramUser */
         $telegramUser = $request->attributes->get('telegramUser');
-        abort_unless($chat->telegram_user_id === $telegramUser->id, 403);
+        abort_unless($conversation->telegram_user_id === $telegramUser->id, 403);
 
-        $messages = $chat->messages()->oldest()->paginate();
+        $conversationMessages = $conversation->conversationMessages()->oldest()->paginate();
 
-        return response()->json(MessageData::collect($messages));
+        return response()->json(MessageData::collect($conversationMessages));
     }
 
     /**
@@ -37,17 +37,17 @@ final class ConversationMessageController
      */
     public function store(
         StoreConversationMessageRequest $request,
-        Conversation $chat,
+        Conversation $conversation,
         AskQuestion $askQuestion,
-        CreateConversationMessage $createChatMessage,
+        CreateConversationMessage $createConversationMessage,
     ): StreamedResponse {
         /** @var TelegramUser $telegramUser */
         $telegramUser = $request->attributes->get('telegramUser');
-        abort_unless($chat->telegram_user_id === $telegramUser->id, 403);
+        abort_unless($conversation->telegram_user_id === $telegramUser->id, 403);
 
-        $stream = $askQuestion->handle($chat, $request->validated('content'));
+        $stream = $askQuestion->handle($conversation, $request->validated('content'));
 
-        return response()->stream(callback: function () use ($stream, $chat, $createChatMessage): void {
+        return response()->stream(callback: function () use ($stream, $conversation, $createConversationMessage): void {
             $fullResponse = '';
 
             /** @var CreateStreamedResponse $chunk */
@@ -66,7 +66,7 @@ final class ConversationMessageController
             echo 'data: '.json_encode($data)."\n\n";
             flush();
 
-            $createChatMessage->handle($chat, $fullResponse);
+            $createConversationMessage->handle($conversation, $fullResponse);
         }, headers: [
             'Content-Type' => 'text/event-stream',
             'Cache-Control' => 'no-cache',

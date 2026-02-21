@@ -11,8 +11,8 @@ use Spatie\LaravelData\Data;
 final class MessageData extends Data
 {
     public function __construct(
-        public readonly int $id,
-        public readonly int $chat_id,
+        public readonly string $id,
+        public readonly string $chat_id,
         public readonly MessageRole $role,
         public readonly string $content,
         public readonly ?CarbonImmutable $created_at,

@@ -15,7 +15,7 @@ use Throwable;
 
 final class ConversationController
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, Conversation $conversation): JsonResponse
     {
         /** @var TelegramUser $telegramUser */
         $telegramUser = $request->attributes->get('telegramUser');
@@ -37,27 +37,27 @@ final class ConversationController
         /** @var TelegramUser $telegramUser */
         $telegramUser = $request->attributes->get('telegramUser');
 
-        $chat = $createChat->handle($telegramUser, $request->youtubeUrl());
+        $conversation = $createChat->handle($telegramUser, $request->youtubeUrl());
 
-        return response()->json(ConversationData::from($chat->load('youtubeVideo', 'messages')), 201);
+        return response()->json(ConversationData::from($conversation->load('youtubeVideo', 'conversationMessages')), 201);
     }
 
-    public function show(Request $request, Conversation $chat): JsonResponse
+    public function show(Request $request, Conversation $conversation): JsonResponse
     {
         /** @var TelegramUser $telegramUser */
         $telegramUser = $request->attributes->get('telegramUser');
-        abort_unless($chat->telegram_user_id === $telegramUser->id, 403);
+        abort_unless($conversation->telegram_user_id === $telegramUser->id, 403);
 
-        return response()->json(ConversationData::from($chat->load('youtubeVideo', 'messages'))->include('*'));
+        return response()->json(ConversationData::from($conversation->load('youtubeVideo', 'conversationMessages'))->include('*'));
     }
 
-    public function destroy(Request $request, Conversation $chat): JsonResponse
+    public function destroy(Request $request, Conversation $conversation): JsonResponse
     {
         /** @var TelegramUser $telegramUser */
         $telegramUser = $request->attributes->get('telegramUser');
-        abort_unless($chat->telegram_user_id === $telegramUser->id, 403);
+        abort_unless($conversation->telegram_user_id === $telegramUser->id, 403);
 
-        $chat->delete();
+        $conversation->delete();
 
         return response()->json(null, 204);
     }

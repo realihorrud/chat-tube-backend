@@ -10,7 +10,7 @@ use Spatie\LaravelData\Data;
 final class YoutubeVideoData extends Data
 {
     public function __construct(
-        public readonly int $id,
+        public readonly string $id,
         public readonly string $video_id,
         public readonly string $url,
         public readonly ?string $title,

@@ -7,7 +7,7 @@ namespace App\Actions;
 use App\Enums\ConversationStatus;
 use App\Enums\MessageRole;
 use App\Models\Conversation;
-use App\Models\Message;
+use App\Models\ConversationMessage;
 use Illuminate\Support\Facades\DB;
 use OpenAI\Laravel\Facades\OpenAI;
 use OpenAI\Responses\StreamResponse;
@@ -31,22 +31,22 @@ EOF;
     /**
      * @throws Throwable
      */
-    public function handle(Conversation $chat, string $question): StreamResponse
+    public function handle(Conversation $conversation, string $question): StreamResponse
     {
-        Assert::same($chat->status, ConversationStatus::Ready, 'Chat is not ready for questions.');
-        Assert::notNull($chat->youtubeVideo, 'Chat has no associated video.');
+        Assert::same($conversation->status, ConversationStatus::Ready, 'Chat is not ready for questions.');
+        Assert::notNull($conversation->youtubeVideo, 'Chat has no associated video.');
 
-        DB::transaction(function () use ($chat, $question): Message {
-            $message = new Message;
-            $message->role = MessageRole::User;
-            $message->content = $question;
+        DB::transaction(function () use ($conversation, $question): ConversationMessage {
+            $conversationMessage = new ConversationMessage;
+            $conversationMessage->role = MessageRole::User;
+            $conversationMessage->content = $question;
 
-            $chat->messages()->save($message);
+            $conversation->conversationMessages()->save($conversationMessage);
 
-            return $message;
+            return $conversationMessage;
         });
 
-        $video = $chat->youtubeVideo;
+        $video = $conversation->youtubeVideo;
 
         return OpenAI::responses()->createStreamed([
             'model' => 'gpt-5',

@@ -6,11 +6,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property int $id
+ * @property string $id
  * @property string $vector_store_id
  * @property string $file_id
  * @property string $video_id
@@ -19,10 +20,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $description
  * @property array<array-key, mixed> $tags
  * @property array<array-key, mixed> $additional_data
- * @property string $uploaded_at
+ * @property string|null $uploaded_at
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property int|null $chat_id
+ * @property string|null $chat_id
  * @property-read YoutubeVideoAuthor|null $author
  * @property-read YoutubeVideoMedia|null $media
  * @property-read YoutubeVideoStat|null $stats
@@ -49,6 +50,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 final class YoutubeVideo extends Model
 {
+    use HasUuids;
+
     protected $casts = [
         'tags' => 'array',
         'additional_data' => 'array',

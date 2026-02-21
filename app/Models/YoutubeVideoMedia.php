@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Supadata\Enums\TypeEnum;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $id
+ * @property string $id
  * @property int|null $duration
  * @property string|null $thumbnail_url
  * @property string|null $url
  * @property array<array-key, mixed>|null $items
- * @property int $youtube_video_id
+ * @property string $youtube_video_id
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property TypeEnum $type
@@ -37,6 +38,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 final class YoutubeVideoMedia extends Model
 {
+    use HasUuids;
+
     protected $casts = [
         'type' => TypeEnum::class,
         'items' => 'array',

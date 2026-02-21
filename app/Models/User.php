@@ -7,10 +7,11 @@ namespace App\Models;
 use Carbon\CarbonImmutable;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
- * @property int $id
+ * @property string $id
  * @property string $name
  * @property string $email
  * @property string|null $email_verified_at
@@ -33,4 +34,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  *
  * @mixin Eloquent
  */
-final class User extends Authenticatable {}
+final class User extends Authenticatable
+{
+    use HasUuids;
+}
