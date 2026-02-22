@@ -32,8 +32,7 @@ EOF;
     public function __construct(
         #[Config('services.openai.model')]
         private string $model,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws Throwable
@@ -54,11 +53,16 @@ EOF;
         });
 
         $video = $conversation->youtubeVideo;
+        $history = $conversation->conversationMessages()
+            ->select(['role', 'content'])
+            ->oldest()
+            ->get()
+            ->toArray();
 
         return OpenAI::responses()->createStreamed([
             'model' => $this->model,
             'instructions' => self::INSTRUCTIONS,
-            'input' => $question,
+            'input' => $history,
             'tools' => [
                 [
                     'type' => 'file_search',

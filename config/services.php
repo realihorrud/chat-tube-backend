@@ -48,7 +48,7 @@ return [
         'api_key' => env('SUPADATA_API_KEY'),
     ],
 
-    'open_ai' => [
+    'openai' => [
         'model' => env('OPENAI_MODEL', 'gpt-4.1-mini'),
         'vector_stores' => [
             'expires_in_days' => 30,

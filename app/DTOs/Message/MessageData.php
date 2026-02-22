@@ -12,7 +12,7 @@ final class MessageData extends Data
 {
     public function __construct(
         public readonly string $id,
-        public readonly string $chat_id,
+        public readonly string $conversation_id,
         public readonly MessageRole $role,
         public readonly string $content,
         public readonly ?CarbonImmutable $created_at,

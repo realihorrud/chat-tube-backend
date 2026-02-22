@@ -8,9 +8,11 @@ use App\DTOs\YoutubeVideo\YoutubeVideoDTO;
 use App\Enums\ConversationStatus;
 use App\Models\Conversation;
 use App\Models\TelegramUser;
+use App\Models\YoutubeVideo;
 use App\Services\CreateTranscriptFileService;
 use App\Services\YoutubeVideosService;
 use App\Supadata\Entities\Error;
+use App\Supadata\Entities\Metadata;
 use App\Supadata\SupadataSDK;
 use App\ValueObjects\YoutubeUrl;
 use Illuminate\Container\Attributes\Config;
@@ -25,7 +27,8 @@ final readonly class StartConversation
         private SupadataSDK $sdk,
         private YoutubeVideosService $youtubeVideosService,
         private CreateTranscriptFileService $createTranscriptFileService,
-        #[Config('services.open_ai.vector_stores.expires_in_days')]
+        private CreateConversationMessage $createConversationMessage,
+        #[Config('services.openai.vector_stores.expires_in_days')]
         private int $expiresInDays,
     ) {}
 
@@ -60,15 +63,22 @@ final readonly class StartConversation
      */
     private function processVideo(Conversation $conversation, YoutubeUrl $videoUrl): void
     {
-        $transcript = $this->sdk->universalTranscript()->getTranscript($videoUrl);
+        $metadata = $this->sdk->universalMetadata()->getMetadata($videoUrl->toUrl());
+
+        $youtubeVideo = YoutubeVideo::query()->firstWhere('video_id', $metadata->id);
+        if (! empty($youtubeVideo)) {
+            $this->makeConversationReady($conversation, $metadata, $youtubeVideo);
+
+            return;
+        }
+
+        $transcript = $this->sdk->universalTranscript()->getTranscript($videoUrl, text: true);
         if ($transcript instanceof Error) {
             $conversation->status = ConversationStatus::Failed;
             $conversation->save();
 
             return;
         }
-
-        $metadata = $this->sdk->universalMetadata()->getMetadata($videoUrl->toUrl());
 
         $filename = $this->createTranscriptFileService->handle($metadata, $transcript);
 
@@ -102,11 +112,20 @@ final readonly class StartConversation
             'metadata' => $metadata,
         ]));
 
+        $this->makeConversationReady($conversation, $metadata, $youtubeVideo);
+    }
+
+    private function makeConversationReady(Conversation $conversation, Metadata $metadata, YoutubeVideo $youtubeVideo): void
+    {
+        $readyMessage = 'Your video has been processed successfully! Ask me anything about it.';
+
         DB::transaction(function () use ($conversation, $metadata, $youtubeVideo): void {
             $conversation->youtube_video_id = $youtubeVideo->id;
             $conversation->title = $metadata->title;
             $conversation->status = ConversationStatus::Ready;
             $conversation->save();
         });
+
+        $this->createConversationMessage->handle($conversation, $readyMessage);
     }
 }

@@ -48,7 +48,10 @@ final readonly class ConversationController
 
         $conversation = $createChat->handle($telegramUser, $request->youtubeUrl());
 
-        return response()->json(ConversationData::from($conversation->load('youtubeVideo', 'conversationMessages')), 201);
+        return response()->json(
+            data: ConversationData::from($conversation->load('youtubeVideo', 'conversationMessages'))->include('messages'),
+            status: 201,
+        );
     }
 
     public function show(Request $request, Conversation $conversation): JsonResponse
@@ -57,7 +60,9 @@ final readonly class ConversationController
         $telegramUser = $request->attributes->get('telegramUser');
         abort_unless($conversation->telegram_user_id === $telegramUser->id, 403);
 
-        return response()->json(ConversationData::from($conversation->load('youtubeVideo', 'conversationMessages'))->include('*'));
+        return response()->json(
+            ConversationData::from($conversation->load('youtubeVideo', 'conversationMessages'))->include('*')
+        );
     }
 
     public function destroy(Request $request, Conversation $conversation): JsonResponse
