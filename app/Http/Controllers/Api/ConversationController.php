@@ -21,7 +21,8 @@ final readonly class ConversationController
     public function __construct(
         #[Config('services.telegram.mini_app_url')]
         private string $miniAppUrl,
-    ) {}
+    ) {
+    }
 
     public function index(Request $request): JsonResponse
     {
@@ -49,7 +50,9 @@ final readonly class ConversationController
         $conversation = $createChat->handle($telegramUser, $request->youtubeUrl());
 
         return response()->json(
-            data: ConversationData::from($conversation->load('youtubeVideo', 'conversationMessages'))->include('messages'),
+            data: ConversationData::from($conversation->load('youtubeVideo', 'conversationMessages'))->include(
+                'messages'
+            ),
             status: 201,
         );
     }
@@ -110,9 +113,9 @@ final readonly class ConversationController
         abort_unless($conversation->telegram_user_id === $telegramUser->id, 403);
 
         $signedPath = URL::signedRoute('conversations.shared.show', ['conversation' => $conversation->id]);
-        $signature = parse_url($signedPath, PHP_URL_QUERY);
+        $signature = str_replace('signature=', '', parse_url($signedPath, PHP_URL_QUERY));
 
-        $shareUrl = $this->miniAppUrl.'/c/'.$conversation->id.'?'.$signature;
+        $shareUrl = sprintf($this->miniAppUrl . '?startapp=c_%s_%s', $conversation->id, $signature);
 
         return response()->json(['url' => $shareUrl]);
     }
