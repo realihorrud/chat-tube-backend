@@ -78,6 +78,8 @@ final readonly class StartConversation
             $conversation->save();
 
             return;
+        } else if (is_string($transcript)) {
+            // If the transcript is a string, it means that the video is not yet transcribed.
         }
 
         $filename = $this->createTranscriptFileService->handle($metadata, $transcript);
@@ -106,7 +108,7 @@ final readonly class StartConversation
         Log::channel('openai')->info('Transcription file was successfully attached to vector store');
 
         $youtubeVideo = $this->youtubeVideosService->saveYoutubeVideo(YoutubeVideoDTO::from([
-            'chat_id' => $conversation->id,
+            'conversation_id' => $conversation->id,
             'file_id' => $file->id,
             'vector_store_id' => $vectorStoreId,
             'metadata' => $metadata,

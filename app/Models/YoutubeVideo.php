@@ -23,17 +23,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $uploaded_at
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property string|null $chat_id
+ * @property string|null $conversation_id
  * @property-read YoutubeVideoAuthor|null $author
  * @property-read YoutubeVideoMedia|null $media
  * @property-read YoutubeVideoStat|null $stats
  *
- * @method static Builder<static>|YoutubeVideo latestUploadedVideo(int $chatId)
+ * @method static Builder<static>|YoutubeVideo latestUploadedVideo(int $conversationId)
  * @method static Builder<static>|YoutubeVideo newModelQuery()
  * @method static Builder<static>|YoutubeVideo newQuery()
  * @method static Builder<static>|YoutubeVideo query()
  * @method static Builder<static>|YoutubeVideo whereAdditionalData($value)
- * @method static Builder<static>|YoutubeVideo whereChatId($value)
+ * @method static Builder<static>|YoutubeVideo whereConversationId($value)
  * @method static Builder<static>|YoutubeVideo whereCreatedAt($value)
  * @method static Builder<static>|YoutubeVideo whereDescription($value)
  * @method static Builder<static>|YoutubeVideo whereFileId($value)
@@ -85,8 +85,8 @@ final class YoutubeVideo extends Model
      * @param  Builder<YoutubeVideo>  $query
      */
     #[Scope]
-    protected function latestUploadedVideo(Builder $query, int $chatId): void
+    protected function latestUploadedVideo(Builder $query, int $conversationId): void
     {
-        $query->where('chat_id', $chatId)->latest();
+        $query->where('conversation_id', $conversationId)->latest();
     }
 }

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
- * @property string $chat_id
+ * @property string $conversation_id
  * @property MessageRole $role
  * @property string $content
  * @property CarbonImmutable|null $created_at
@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereChatId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereConversationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereId($value)

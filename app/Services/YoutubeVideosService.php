@@ -25,7 +25,7 @@ final class YoutubeVideosService
     {
         return DB::transaction(function () use ($dto): YoutubeVideo {
             $youtubeVideo = new YoutubeVideo();
-            $youtubeVideo->chat_id = $dto->chat_id;
+            $youtubeVideo->conversation_id = $dto->conversation_id;
             $youtubeVideo->vector_store_id = $dto->vector_store_id;
             $youtubeVideo->file_id = $dto->file_id;
             $youtubeVideo->video_id = $dto->metadata->id;
