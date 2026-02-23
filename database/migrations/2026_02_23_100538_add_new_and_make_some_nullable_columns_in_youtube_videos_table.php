@@ -14,7 +14,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('youtube_videos', function (Blueprint $table) {
-            $table->renameColumn('chat_id', 'conversation_id');
+            $table->enum('status', ['queued', 'active', 'completed', 'failed'])->nullable();
+            $table->string('job_id')->nullable();
+
+            $table->string('vector_store_id')->nullable()->change();
+            $table->string('file_id')->nullable()->change();
+
         });
     }
 
@@ -24,7 +29,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('youtube_videos', function (Blueprint $table) {
-            $table->renameColumn('conversation_id', 'chat_id');
+            $table->dropColumn('job_id');
+            $table->dropColumn('status');
+
+            $table->string('vector_store_id')->nullable(false)->change();
+            $table->string('file_id')->nullable(false)->change();
         });
     }
 };

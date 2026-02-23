@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Supadata\Enums\VideoTranscriptStatus;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -12,8 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property string $id
- * @property string $vector_store_id
- * @property string $file_id
+ * @property string|null $vector_store_id
+ * @property string|null $file_id
  * @property string $video_id
  * @property string $url
  * @property string|null $title
@@ -24,6 +25,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property string|null $conversation_id
+ * @property string|null $status
+ * @property string|null $job_id
  * @property-read YoutubeVideoAuthor|null $author
  * @property-read YoutubeVideoMedia|null $media
  * @property-read YoutubeVideoStat|null $stats
@@ -38,6 +41,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static Builder<static>|YoutubeVideo whereDescription($value)
  * @method static Builder<static>|YoutubeVideo whereFileId($value)
  * @method static Builder<static>|YoutubeVideo whereId($value)
+ * @method static Builder<static>|YoutubeVideo whereJobId($value)
+ * @method static Builder<static>|YoutubeVideo whereStatus($value)
  * @method static Builder<static>|YoutubeVideo whereTags($value)
  * @method static Builder<static>|YoutubeVideo whereTitle($value)
  * @method static Builder<static>|YoutubeVideo whereUpdatedAt($value)
@@ -55,6 +60,7 @@ final class YoutubeVideo extends Model
     protected $casts = [
         'tags' => 'array',
         'additional_data' => 'array',
+        'status' => VideoTranscriptStatus::class,
     ];
 
     /**

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Supadata\Entities;
 
-use App\Supadata\Enums\PlatformEnum;
-use App\Supadata\Enums\TypeEnum;
+use App\Supadata\Enums\EntityType;
+use App\Supadata\Enums\Platform;
 use Spatie\LaravelData\Dto;
 use Spatie\LaravelData\Optional;
 
 final class Metadata extends Dto
 {
     public function __construct(
-        public TypeEnum $type,
-        public PlatformEnum $platform,
+        public EntityType $type,
+        public Platform $platform,
         public string $id,
         public string $url,
         public ?string $title,

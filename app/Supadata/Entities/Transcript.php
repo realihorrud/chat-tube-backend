@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Supadata\Entities;
 
+use App\Supadata\Enums\VideoTranscriptStatus;
 use Spatie\LaravelData\Dto;
 
 /**
@@ -17,6 +18,7 @@ final class Transcript extends Dto
     public function __construct(
         public readonly string $content,
         public readonly string $lang,
-        public readonly array $availableLangs
+        public readonly array $availableLangs,
+        public readonly ?VideoTranscriptStatus $status,
     ) {}
 }

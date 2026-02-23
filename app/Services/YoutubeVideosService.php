@@ -25,6 +25,7 @@ final class YoutubeVideosService
     {
         return DB::transaction(function () use ($dto): YoutubeVideo {
             $youtubeVideo = new YoutubeVideo();
+            $youtubeVideo->status = $dto->status;
             $youtubeVideo->conversation_id = $dto->conversation_id;
             $youtubeVideo->vector_store_id = $dto->vector_store_id;
             $youtubeVideo->file_id = $dto->file_id;
@@ -35,6 +36,7 @@ final class YoutubeVideosService
             $youtubeVideo->tags = $dto->metadata->tags;
             $youtubeVideo->additional_data = $dto->metadata->additionalData;
             $youtubeVideo->uploaded_at = $dto->metadata->createdAt instanceof Optional ? null : $dto->metadata->createdAt;
+            $youtubeVideo->job_id = $dto->job_id;
             $youtubeVideo->save();
 
             $this->saveVideoStats($youtubeVideo, $dto->metadata->stats);

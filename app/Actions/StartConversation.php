@@ -13,6 +13,7 @@ use App\Services\CreateTranscriptFileService;
 use App\Services\YoutubeVideosService;
 use App\Supadata\Entities\Error;
 use App\Supadata\Entities\Metadata;
+use App\Supadata\Enums\VideoTranscriptStatus;
 use App\Supadata\SupadataSDK;
 use App\ValueObjects\YoutubeUrl;
 use Illuminate\Container\Attributes\Config;
@@ -78,8 +79,18 @@ final readonly class StartConversation
             $conversation->save();
 
             return;
-        } else if (is_string($transcript)) {
+        }
+        if (is_string($jobId = $transcript)) {
             // If the transcript is a string, it means that the video is not yet transcribed.
+            // Save the video with status Queued and job_id
+            $this->youtubeVideosService->saveYoutubeVideo(YoutubeVideoDTO::from([
+                'status' => VideoTranscriptStatus::Queued,
+                'job_id' => $jobId,
+                'conversation_id' => $conversation->id,
+                'metadata' => $metadata,
+            ]));
+
+            return;
         }
 
         $filename = $this->createTranscriptFileService->handle($metadata, $transcript);
@@ -108,6 +119,7 @@ final readonly class StartConversation
         Log::channel('openai')->info('Transcription file was successfully attached to vector store');
 
         $youtubeVideo = $this->youtubeVideosService->saveYoutubeVideo(YoutubeVideoDTO::from([
+            'status' => VideoTranscriptStatus::Completed,
             'conversation_id' => $conversation->id,
             'file_id' => $file->id,
             'vector_store_id' => $vectorStoreId,

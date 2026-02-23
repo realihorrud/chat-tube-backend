@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Supadata\Enums;
 
-enum PlatformEnum: string
+enum Platform: string
 {
     case Youtube = 'youtube';
     case Instagram = 'instagram';

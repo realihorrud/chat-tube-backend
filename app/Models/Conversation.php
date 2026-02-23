@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $youtube_video_id
  * @property string|null $title
  * @property ConversationStatus $status
- * @property int $order
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
+ * @property int $order
  * @property-read \Illuminate\Database\Eloquent\Collection<int, ConversationMessage> $conversationMessages
  * @property-read int|null $conversation_messages_count
  * @property-read TelegramUser $telegramUser
@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereTelegramUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Conversation whereTitle($value)

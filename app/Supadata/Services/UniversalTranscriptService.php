@@ -52,4 +52,21 @@ final readonly class UniversalTranscriptService
             Response::HTTP_OK => Transcript::from($response->json()),
         };
     }
+
+    /**
+     * @see https://docs.supadata.ai/get-transcript#getting-job-results
+     *
+     * @throws ConnectionException
+     * @throws RequestException
+     */
+    public function getJobResult(string $jobId): Error|Transcript
+    {
+        $response = Http::timeout(240)->baseUrl($this->baseUrl)->withHeaders([
+            'x-api-key' => $this->apiKey,
+        ])->get("transcript/$jobId")->throw();
+
+        return match ($response->getStatusCode()) {
+            Response::HTTP_OK => Transcript::from($response->json()),
+        };
+    }
 }

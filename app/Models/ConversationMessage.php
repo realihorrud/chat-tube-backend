@@ -17,13 +17,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $content
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
- * @property-read Conversation|null $conversation
+ * @property-read Conversation $conversation
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereConversationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereConversationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ConversationMessage whereRole($value)
