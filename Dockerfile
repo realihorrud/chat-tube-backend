@@ -2,6 +2,7 @@ FROM php:8.4-fpm
 
 ARG APP_ENV
 
+ENV APP_ENV=${APP_ENV}
 ENV UID=33 \
     GID=33
 
@@ -56,6 +57,11 @@ WORKDIR /var/www/html
 
 # Copy project files
 COPY --chown=www-data:www-data . .
+
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction
 
 # Install dependencies based on environment
 RUN echo "Installing dependencies for environment ($APP_ENV)..."
