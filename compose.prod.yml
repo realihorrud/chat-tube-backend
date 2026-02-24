@@ -1,6 +1,6 @@
 services:
   app:
-    image: realihorrud/chat-tube-backend/app:latest
+    image: ghcr.io/realihorrud/chat-tube-backend/app:latest
     env_file:
       - .env
     depends_on:
