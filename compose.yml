@@ -1,6 +1,6 @@
 services:
   app:
-    container_name: ai_summarizer_bot_app
+    container_name: chat_tube_backend_app
     build:
       context: .
       args:
@@ -26,7 +26,7 @@ services:
       timeout: 10s
       retries: 6
   db:
-    container_name: ai_summarizer_bot_db
+    container_name: chat_tube_backend_db
     build: .docker/db
     restart: unless-stopped
     environment:
@@ -44,7 +44,7 @@ services:
         max-size: "100M"
         max-file: "5"
   redis:
-    container_name: ai_summarizer_bot_redis
+    container_name: chat_tube_backend_redis
     build: .docker/redis
     command: redis-server --appendonly yes
     restart: unless-stopped
