@@ -31,11 +31,6 @@ if [ "${APP_ENV}" = "local" ]; then
   fi
 fi
 
-composer install -n --no-scripts
-
-php artisan migrate --force
-php artisan db:seed --force
-
 php artisan storage:link
 
 # Change owner in storage
