@@ -7,7 +7,7 @@ services:
       - db
       - redis
     ports:
-      - "80:80"
+      - "${APP_PORT:-8080}:80"
     restart: unless-stopped
 
   db:
