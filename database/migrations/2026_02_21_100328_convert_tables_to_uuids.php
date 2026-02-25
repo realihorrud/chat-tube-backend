@@ -21,8 +21,8 @@ return new class extends Migration
         });
 
         Schema::table('conversations', function (Blueprint $table): void {
-            $table->dropForeign('conversations_telegram_user_id_foreign');
-            $table->dropForeign('conversations_youtube_video_id_foreign');
+            $table->dropForeign('chats_telegram_user_id_foreign');
+            $table->dropForeign('chats_youtube_video_id_foreign');
         });
 
         Schema::table('youtube_video_authors', function (Blueprint $table): void {
