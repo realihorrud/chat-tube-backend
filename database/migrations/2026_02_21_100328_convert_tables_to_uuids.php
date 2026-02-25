@@ -13,7 +13,7 @@ return new class extends Migration
     {
         // Drop all foreign keys first
         Schema::table('conversation_messages', function (Blueprint $table): void {
-            $table->dropForeign('conversation_messages_chat_id_foreign');
+            $table->dropForeign('messages_chat_id_foreign');
         });
 
         Schema::table('youtube_videos', function (Blueprint $table): void {
