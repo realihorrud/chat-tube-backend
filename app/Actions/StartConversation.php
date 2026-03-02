@@ -75,6 +75,8 @@ final readonly class StartConversation
 
         $transcript = $this->sdk->universalTranscript()->getTranscript($videoUrl, text: true);
         if ($transcript instanceof Error) {
+            Log::channel('supadata')->error($transcript->message);
+
             $conversation->status = ConversationStatus::Failed;
             $conversation->save();
 
